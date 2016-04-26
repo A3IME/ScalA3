@@ -10,14 +10,14 @@ SET check_function_bodies = false;
 SET client_min_messages = warning;
 
 --
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: -
 --
 
 CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 
 --
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: -
 --
 
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
@@ -30,22 +30,19 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: estado; Type: TABLE; Schema: public; Owner: scala3; Tablespace: 
+-- Name: estado; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE estado (
     idestado integer NOT NULL,
-    idtipoestado integer,
     datainicio date NOT NULL,
     datatermino date,
     estadodescricao character varying(200)
 );
 
 
-ALTER TABLE public.estado OWNER TO scala3;
-
 --
--- Name: estado_idestado_seq; Type: SEQUENCE; Schema: public; Owner: scala3
+-- Name: estado_idestado_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE estado_idestado_seq
@@ -56,17 +53,15 @@ CREATE SEQUENCE estado_idestado_seq
     CACHE 1;
 
 
-ALTER TABLE public.estado_idestado_seq OWNER TO scala3;
-
 --
--- Name: estado_idestado_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: scala3
+-- Name: estado_idestado_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
 ALTER SEQUENCE estado_idestado_seq OWNED BY estado.idestado;
 
 
 --
--- Name: funcionario; Type: TABLE; Schema: public; Owner: scala3; Tablespace: 
+-- Name: funcionario; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE funcionario (
@@ -76,14 +71,14 @@ CREATE TABLE funcionario (
     idestado integer,
     matricula integer NOT NULL,
     email character varying(30) NOT NULL,
-    telefone character(11) NOT NULL
+    telefone character(11) NOT NULL,
+    habilitacao integer NOT NULL,
+    senha character varying(50) NOT NULL
 );
 
 
-ALTER TABLE public.funcionario OWNER TO scala3;
-
 --
--- Name: funcionario_idfunc_seq; Type: SEQUENCE; Schema: public; Owner: scala3
+-- Name: funcionario_idfunc_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE funcionario_idfunc_seq
@@ -94,32 +89,41 @@ CREATE SEQUENCE funcionario_idfunc_seq
     CACHE 1;
 
 
-ALTER TABLE public.funcionario_idfunc_seq OWNER TO scala3;
-
 --
--- Name: funcionario_idfunc_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: scala3
+-- Name: funcionario_idfunc_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
 ALTER SEQUENCE funcionario_idfunc_seq OWNED BY funcionario.idfunc;
 
 
 --
--- Name: tipoestado; Type: TABLE; Schema: public; Owner: scala3; Tablespace: 
+-- Name: servico; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE TABLE tipoestado (
-    idtipoestado integer NOT NULL,
-    nomeestado character varying(50) NOT NULL
+CREATE TABLE servico (
+    idservico integer NOT NULL,
+    data date,
+    idtiposervico integer,
+    qtde integer
 );
 
 
-ALTER TABLE public.tipoestado OWNER TO scala3;
-
 --
--- Name: tipoestado_idtipoestado_seq; Type: SEQUENCE; Schema: public; Owner: scala3
+-- Name: servico_funcionario; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE SEQUENCE tipoestado_idtipoestado_seq
+CREATE TABLE servico_funcionario (
+    idservicofuncionaio integer NOT NULL,
+    idservico integer,
+    idfuncionario integer
+);
+
+
+--
+-- Name: servico_funcionario_idservicofuncionaio_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE servico_funcionario_idservicofuncionaio_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -127,83 +131,174 @@ CREATE SEQUENCE tipoestado_idtipoestado_seq
     CACHE 1;
 
 
-ALTER TABLE public.tipoestado_idtipoestado_seq OWNER TO scala3;
-
 --
--- Name: tipoestado_idtipoestado_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: scala3
+-- Name: servico_funcionario_idservicofuncionaio_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE tipoestado_idtipoestado_seq OWNED BY tipoestado.idtipoestado;
+ALTER SEQUENCE servico_funcionario_idservicofuncionaio_seq OWNED BY servico_funcionario.idservicofuncionaio;
 
 
 --
--- Name: idestado; Type: DEFAULT; Schema: public; Owner: scala3
+-- Name: servico_idservico_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE servico_idservico_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: servico_idservico_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE servico_idservico_seq OWNED BY servico.idservico;
+
+
+--
+-- Name: tiposervico; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE tiposervico (
+    funcao character varying(20),
+    cor character varying(20),
+    idtiposervico integer NOT NULL
+);
+
+
+--
+-- Name: tiposervico_idtiposervico_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE tiposervico_idtiposervico_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tiposervico_idtiposervico_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE tiposervico_idtiposervico_seq OWNED BY tiposervico.idtiposervico;
+
+
+--
+-- Name: idestado; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY estado ALTER COLUMN idestado SET DEFAULT nextval('estado_idestado_seq'::regclass);
 
 
 --
--- Name: idfunc; Type: DEFAULT; Schema: public; Owner: scala3
+-- Name: idfunc; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY funcionario ALTER COLUMN idfunc SET DEFAULT nextval('funcionario_idfunc_seq'::regclass);
 
 
 --
--- Name: idtipoestado; Type: DEFAULT; Schema: public; Owner: scala3
+-- Name: idservico; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY tipoestado ALTER COLUMN idtipoestado SET DEFAULT nextval('tipoestado_idtipoestado_seq'::regclass);
+ALTER TABLE ONLY servico ALTER COLUMN idservico SET DEFAULT nextval('servico_idservico_seq'::regclass);
 
 
 --
--- Data for Name: estado; Type: TABLE DATA; Schema: public; Owner: scala3
+-- Name: idservicofuncionaio; Type: DEFAULT; Schema: public; Owner: -
 --
 
-COPY estado (idestado, idtipoestado, datainicio, datatermino, estadodescricao) FROM stdin;
+ALTER TABLE ONLY servico_funcionario ALTER COLUMN idservicofuncionaio SET DEFAULT nextval('servico_funcionario_idservicofuncionaio_seq'::regclass);
+
+
+--
+-- Name: idtiposervico; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY tiposervico ALTER COLUMN idtiposervico SET DEFAULT nextval('tiposervico_idtiposervico_seq'::regclass);
+
+
+--
+-- Data for Name: estado; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY estado (idestado, datainicio, datatermino, estadodescricao) FROM stdin;
 \.
 
 
 --
--- Name: estado_idestado_seq; Type: SEQUENCE SET; Schema: public; Owner: scala3
+-- Name: estado_idestado_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
 SELECT pg_catalog.setval('estado_idestado_seq', 1, false);
 
 
 --
--- Data for Name: funcionario; Type: TABLE DATA; Schema: public; Owner: scala3
+-- Data for Name: funcionario; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY funcionario (idfunc, nomecompleto, eadmin, idestado, matricula, email, telefone) FROM stdin;
+COPY funcionario (idfunc, nomecompleto, eadmin, idestado, matricula, email, telefone, habilitacao, senha) FROM stdin;
 \.
 
 
 --
--- Name: funcionario_idfunc_seq; Type: SEQUENCE SET; Schema: public; Owner: scala3
+-- Name: funcionario_idfunc_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
 SELECT pg_catalog.setval('funcionario_idfunc_seq', 4, true);
 
 
 --
--- Data for Name: tipoestado; Type: TABLE DATA; Schema: public; Owner: scala3
+-- Data for Name: servico; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY tipoestado (idtipoestado, nomeestado) FROM stdin;
+COPY servico (idservico, data, idtiposervico, qtde) FROM stdin;
 \.
 
 
 --
--- Name: tipoestado_idtipoestado_seq; Type: SEQUENCE SET; Schema: public; Owner: scala3
+-- Data for Name: servico_funcionario; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('tipoestado_idtipoestado_seq', 1, false);
+COPY servico_funcionario (idservicofuncionaio, idservico, idfuncionario) FROM stdin;
+\.
 
 
 --
--- Name: estado_pkey; Type: CONSTRAINT; Schema: public; Owner: scala3; Tablespace: 
+-- Name: servico_funcionario_idservicofuncionaio_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('servico_funcionario_idservicofuncionaio_seq', 1, false);
+
+
+--
+-- Name: servico_idservico_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('servico_idservico_seq', 1, false);
+
+
+--
+-- Data for Name: tiposervico; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY tiposervico (funcao, cor, idtiposervico) FROM stdin;
+\.
+
+
+--
+-- Name: tiposervico_idtiposervico_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('tiposervico_idtiposervico_seq', 1, false);
+
+
+--
+-- Name: estado_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY estado
@@ -211,7 +306,7 @@ ALTER TABLE ONLY estado
 
 
 --
--- Name: funcionario_matricula_unique; Type: CONSTRAINT; Schema: public; Owner: scala3; Tablespace: 
+-- Name: funcionario_matricula_unique; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY funcionario
@@ -219,7 +314,7 @@ ALTER TABLE ONLY funcionario
 
 
 --
--- Name: funcionario_pkey; Type: CONSTRAINT; Schema: public; Owner: scala3; Tablespace: 
+-- Name: funcionario_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY funcionario
@@ -227,23 +322,31 @@ ALTER TABLE ONLY funcionario
 
 
 --
--- Name: tipoestado_pkey; Type: CONSTRAINT; Schema: public; Owner: scala3; Tablespace: 
+-- Name: id_servico_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
-ALTER TABLE ONLY tipoestado
-    ADD CONSTRAINT tipoestado_pkey PRIMARY KEY (idtipoestado);
-
-
---
--- Name: estado_idtipoestado_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scala3
---
-
-ALTER TABLE ONLY estado
-    ADD CONSTRAINT estado_idtipoestado_fkey FOREIGN KEY (idtipoestado) REFERENCES tipoestado(idtipoestado);
+ALTER TABLE ONLY servico
+    ADD CONSTRAINT id_servico_pkey PRIMARY KEY (idservico);
 
 
 --
--- Name: funcionario_idestado_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scala3
+-- Name: servico_funcionario_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY servico_funcionario
+    ADD CONSTRAINT servico_funcionario_pkey PRIMARY KEY (idservicofuncionaio);
+
+
+--
+-- Name: tiposervico_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY tiposervico
+    ADD CONSTRAINT tiposervico_pkey PRIMARY KEY (idtiposervico);
+
+
+--
+-- Name: funcionario_idestado_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY funcionario
@@ -251,13 +354,27 @@ ALTER TABLE ONLY funcionario
 
 
 --
--- Name: public; Type: ACL; Schema: -; Owner: postgres
+-- Name: idfuncionario_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-REVOKE ALL ON SCHEMA public FROM PUBLIC;
-REVOKE ALL ON SCHEMA public FROM postgres;
-GRANT ALL ON SCHEMA public TO postgres;
-GRANT ALL ON SCHEMA public TO PUBLIC;
+ALTER TABLE ONLY servico_funcionario
+    ADD CONSTRAINT idfuncionario_fkey FOREIGN KEY (idfuncionario) REFERENCES funcionario(idfunc);
+
+
+--
+-- Name: idservico_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY servico_funcionario
+    ADD CONSTRAINT idservico_fkey FOREIGN KEY (idservico) REFERENCES servico(idservico);
+
+
+--
+-- Name: idtiposervico_foreign_key; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY servico
+    ADD CONSTRAINT idtiposervico_foreign_key FOREIGN KEY (idtiposervico) REFERENCES tiposervico(idtiposervico);
 
 
 --
