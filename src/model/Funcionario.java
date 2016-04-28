@@ -3,13 +3,13 @@ package model;
 public class Funcionario {
 	protected int id;
 	protected String nomeCompleto;
-	protected String matricula;
+	protected int matricula;
 	protected String email;
 	protected String telefone;
 	protected int habilitacao;
 	protected Estado estado;
 	
-	public Funcionario (int id, String nomeCompleto, String matricula, String email, String telefone, int habilitacao, Estado estado) {
+	public Funcionario (int id, String nomeCompleto, int matricula, String email, String telefone, int habilitacao, Estado estado) {
 		this.id = id;
 		this.nomeCompleto = nomeCompleto;
 		this.matricula = matricula;
@@ -35,11 +35,11 @@ public class Funcionario {
 		this.nomeCompleto = nomeCompleto;
 	}
 
-	public String getMatricula() {
+	public int getMatricula() {
 		return matricula;
 	}
 
-	public void setMatricula(String matricula) {
+	public void setMatricula(int matricula) {
 		this.matricula = matricula;
 	}
 

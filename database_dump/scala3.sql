@@ -242,6 +242,8 @@ SELECT pg_catalog.setval('estado_idestado_seq', 1, false);
 --
 
 COPY funcionario (idfunc, nomecompleto, eadmin, idestado, matricula, email, telefone, habilitacao, senha) FROM stdin;
+5	a	t	\N	20	c	d          	10	e
+6	a3ime	t	\N	10	a3ime@a3ime.com	66666666666	11	TODO
 \.
 
 
@@ -249,7 +251,7 @@ COPY funcionario (idfunc, nomecompleto, eadmin, idestado, matricula, email, tele
 -- Name: funcionario_idfunc_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('funcionario_idfunc_seq', 4, true);
+SELECT pg_catalog.setval('funcionario_idfunc_seq', 15, true);
 
 
 --

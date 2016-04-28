@@ -4,6 +4,6 @@ import java.util.List;
 
 import model.Funcionario;
 
-public interface FuncionarioDAO {
+public interface FuncionarioDAO extends InterfaceDAO {
 	public List<Funcionario> listar();
 }
