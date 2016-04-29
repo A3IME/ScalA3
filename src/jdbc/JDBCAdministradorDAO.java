@@ -74,12 +74,66 @@ public class JDBCAdministradorDAO extends JDBCDAO implements AdministradorDAO {
 
 	@Override
 	public List<Administrador> listarPorMatricula(String matricula) {
-		return null;
+		List<Administrador> administradores = null;
+		try {
+			administradores = new ArrayList<Administrador>();
+			if (this.statement == null) {
+				this.statement = this.database.createStatement();
+			}
+			this.resultSet = statement.executeQuery("SELECT * FROM funcionario WHERE " +
+					"matricula = '" + matricula + "';");
+			
+			while (resultSet.next()) {
+				administradores.add(new Administrador(
+						resultSet.getInt("idfunc"),
+						resultSet.getString("nomecompleto"),
+						resultSet.getInt("matricula"),
+						resultSet.getString("email"),
+						resultSet.getString("telefone"),
+						resultSet.getInt("habilitacao"),
+						null));
+			}
+		}
+		catch (SQLException e) {
+			System.out.println("Não foi possível buscar o adminstrador. Verifique sua conexão com o banco de dados.");
+		}
+		catch (NullPointerException e) {
+			System.out.println("Não conectado ao banco de dados. Não foi possível buscar administradores.");
+		}
+		
+		return administradores;
 	}
 
 	@Override
 	public List<Administrador> listarPorEmail(String email) {
-		return null;
+		List<Administrador> administradores = null;
+		try {
+			administradores = new ArrayList<Administrador>();
+			if (this.statement == null) {
+				this.statement = this.database.createStatement();
+			}
+			this.resultSet = statement.executeQuery("SELECT * FROM funcionario WHERE " +
+					"email = '" + email + "';");
+			
+			while (resultSet.next()) {
+				administradores.add(new Administrador(
+						resultSet.getInt("idfunc"),
+						resultSet.getString("nomecompleto"),
+						resultSet.getInt("matricula"),
+						resultSet.getString("email"),
+						resultSet.getString("telefone"),
+						resultSet.getInt("habilitacao"),
+						null));
+			}
+		}
+		catch (SQLException e) {
+			System.out.println("Não foi possível buscar o adminstrador. Verifique sua conexão com o banco de dados.");
+		}
+		catch (NullPointerException e) {
+			System.out.println("Não conectado ao banco de dados. Não foi possível buscar administradores.");
+		}
+		
+		return administradores;
 	}
 
 	@Override
