@@ -19,8 +19,6 @@ public class Teste {
 		
 		dao.open(nomeBancoDeDados, nomeUsuario, senha);
 		
-		Administrador admin = new Administrador(0, "a3ime", 400, "a3ime1@a3ime.com", "66666666667", 12, null);
-		dao.inserir(admin);
 		List<Administrador> administradores = dao.listarPorEmail("a3ime@a3ime.com");
 		for (Administrador administrador : administradores) {
 			System.out.println(administrador.getId() + " "
@@ -29,6 +27,9 @@ public class Teste {
 					+ administrador.getEmail() + " "
 					+ administrador.getTelefone() + " ");
 		}
+		
+		administradores.get(1).setNomeCompleto("Mopa2");
+		dao.atualizar(administradores.get(1));
 		
 		dao.close();
 	}

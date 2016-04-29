@@ -137,6 +137,32 @@ public class JDBCAdministradorDAO extends JDBCDAO implements AdministradorDAO {
 	}
 
 	@Override
-	public void atualizar(Administrador administrador) {
+	public boolean atualizar(Administrador administrador) {
+		try{
+			if (this.statement == null) {
+				this.statement = this.database.createStatement();
+			}
+			
+			String attributes = "nomecompleto = '" + administrador.getNomeCompleto() + "', "
+					+ (administrador.getEstado() == null ? ("") : ("idestado = " + administrador.getEstado().getId() + ", "))
+					+ "matricula = " + administrador.getMatricula() + ", "
+				    + "email = '" + administrador.getEmail() + "', "
+				    + "telefone = '" + administrador.getTelefone() + "', "
+				    + "habilitacao = " + administrador.getHabilitacao(); 
+				
+			return statement.execute("UPDATE funcionario SET "
+					+ attributes
+					+ " WHERE idfunc = " + administrador.getId() + ";");
+					
+		}
+		catch (SQLException e) {
+			System.out.println(e.getMessage());
+			System.out.println("Não foi possível atualizar este administrador. Verifique se este administrador realmente existe.");
+			return false;
+		}
+		catch (NullPointerException e) {
+			System.out.println("Não conectado ao banco de dados. Não foi possível atualizar administrador");
+			return false;
+		}
 	}
 }
