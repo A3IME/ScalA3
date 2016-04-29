@@ -1,4 +1,5 @@
 import java.sql.*;
+import java.util.List;
 import java.util.Scanner;
 
 import jdbc.JDBCAdministradorDAO;
@@ -18,8 +19,16 @@ public class Teste {
 		
 		dao.open(nomeBancoDeDados, nomeUsuario, senha);
 		
-		Administrador admin = new Administrador(0, "a3ime", 10, "a3ime@a3ime.com", "66666666666", 11, null);
+		Administrador admin = new Administrador(0, "a3ime", 400, "a3ime1@a3ime.com", "66666666667", 12, null);
 		dao.inserir(admin);
+		List<Administrador> administradores = dao.listarPorNome("a3ime");
+		for (Administrador administrador : administradores) {
+			System.out.println(administrador.getId() + " "
+					+ administrador.getNomeCompleto() + " "
+					+ administrador.getMatricula() + " "
+					+ administrador.getEmail() + " "
+					+ administrador.getTelefone() + " ");
+		}
 		
 		dao.close();
 	}

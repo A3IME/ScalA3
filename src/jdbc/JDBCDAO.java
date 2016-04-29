@@ -47,7 +47,6 @@ public abstract class JDBCDAO implements InterfaceDAO {
 		
 		try {
 			this.statement.close();
-			System.out.println("Conexão Fechada");
 		}
 		catch (SQLException e) {
 			System.out.println("SQL Exception: " + e.getMessage());
