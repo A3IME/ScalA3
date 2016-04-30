@@ -169,4 +169,24 @@ public class JDBCAdministradorDAO extends JDBCDAO implements AdministradorDAO {
 			return false;
 		}
 	}
+
+	@Override
+	public boolean destituir(Administrador administrador) {
+		try {
+			if (this.statement == null) {
+				this.statement = this.database.createStatement();
+			}
+			
+			return statement.execute("UPDATE funcionario "
+					+ "SET eadmin = false"
+					+ "WHERE idfunc = " + administrador.getId() + ";");
+		}
+		catch (SQLException e) {
+			
+		}
+		catch (NullPointerException e) {
+			
+		}
+		return false;
+	}
 }

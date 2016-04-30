@@ -10,4 +10,5 @@ public interface AdministradorDAO extends InterfaceDAO {
 	public List<Administrador> listarPorMatricula(int matricula);
 	public List<Administrador> listarPorEmail(String email);
 	public boolean atualizar(Administrador administrador);
+	public boolean destituir(Administrador administrador);
 }
