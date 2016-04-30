@@ -2,7 +2,9 @@ import java.sql.*;
 import java.util.List;
 import java.util.Scanner;
 
+import jdbc.JDBCAdministradorDAO;
 import jdbc.JDBCFuncionarioDAO;
+import model.Administrador;
 import model.Funcionario;
 
 public class Teste {
@@ -19,10 +21,22 @@ public class Teste {
 		
 		dao.open(nomeBancoDeDados, nomeUsuario, senha);
 		
-		List<Funcionario> funcionarios = dao.listarPorMatricula(2);
+		List<Funcionario> funcionarios = dao.listar();
 		for (Funcionario funcionario : funcionarios) {
 			System.out.println(funcionario.toString());
 		}
+		/*
+		
+		dao.tornarAdministrador(funcionarios.get(0));
+		System.out.println("Funcionario " + funcionarios.get(0).toString() + " agora é um administrador");
+		
+		funcionarios.clear();
+		
+		funcionarios = dao.listarPorNome("aaa");	
+		for (Funcionario funcionario : funcionarios) {
+			System.out.println(funcionario.toString());
+		}
+		*/
 				
 		dao.close();
 	}

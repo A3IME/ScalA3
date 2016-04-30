@@ -178,14 +178,14 @@ public class JDBCAdministradorDAO extends JDBCDAO implements AdministradorDAO {
 			}
 			
 			return statement.execute("UPDATE funcionario "
-					+ "SET eadmin = false"
+					+ "SET eadmin = false "
 					+ "WHERE idfunc = " + administrador.getId() + ";");
 		}
 		catch (SQLException e) {
-			
+			System.out.println("Não foi possível destituir este administrador. Verifique se este administrador realmente existe.");
 		}
 		catch (NullPointerException e) {
-			
+			System.out.println("Não conectado ao banco de dados. Não foi possível destituir administrador");
 		}
 		return false;
 	}
