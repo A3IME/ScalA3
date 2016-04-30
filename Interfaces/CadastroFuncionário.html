@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Cadastro de Funcionários</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+	<style>
+		body {
+			background-color:hsl(120,60%,70%);
+		}
+		legend {
+			font-family: Arial, Helvetica, sans-serif;
+			text-align: center;
+			padding-bottom: 50px;
+		    
+		    
+		}
+		form {
+			margin:auto;
+			padding-right: 20px;
+			width: 500px;
+		    height: 300px;
+		    border: 3px solid #73AD21;
+			padding-left: 50px;
+		}
+	</style>
+	
+</head>
+<body>
+	<form action="cadastro" method="post" class="center">
+		<legend id="1">Cadastro de Funcionário</legend>
+			Matrícula: <input type="text" name="mat"><br>
+			Nome: <input type="text" size="60" name="nome"><br>
+			Email: <input type="text" size="60" name="email"><br>
+			Senha: <input type="text" name="senha"><br>
+			Telefone: <input type="text" nmae="tel"><br>
+			Estado:<br>
+				<input type="radio" name="estado" value="funcaoCmdo">
+				Função de Comando<br>
+				<input type="radio" name="estado" value="disp">
+				Dispensado pelo Médico<br>
+				<input type="radio" name="estado" value="outro">
+				Outro<br>
+			
+				<button type="submit" name="Enviar">Enviar</button>
+				<button type="submit" name="cancelar">Cancelar</button>
+	</form>
+	
+</body>
+</html>
