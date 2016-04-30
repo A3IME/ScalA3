@@ -18,6 +18,16 @@ public class Funcionario {
 		this.habilitacao = habilitacao;
 		this.estado = estado;
 	}
+	
+	public String toString() {
+		return (this.id + "\t"
+				+ this.nomeCompleto + "\t"
+				+ this.matricula + "\t"
+				+ this.email + "\t"
+				+ this.telefone + "\t"
+				+ this.habilitacao + "\t"
+				+ (this.estado == null ? null : this.estado.toString()));
+	}
 
 	public int getId() {
 		return id;

@@ -14,6 +14,13 @@ public class Estado {
 		this.setDataTermino(dataTermino);
 		this.setDescricao(descricao);
 	}
+	
+	public String toString() {
+		return (this.id + "\t"
+				+ (this.dataInicio.getYear() + 1900) + "/" + (this.dataInicio.getMonth() + 1) + "/" + this.dataInicio.getDate() + "\t"
+				+ (this.dataTermino.getYear() + 1900) + "/" + (this.dataTermino.getMonth() + 1) + "/" + this.dataTermino.getDate() + "\t"
+				+ this.descricao);
+	}
 
 	public int getId() {
 		return id;

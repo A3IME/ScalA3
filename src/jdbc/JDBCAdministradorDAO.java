@@ -17,7 +17,7 @@ public class JDBCAdministradorDAO extends JDBCDAO implements AdministradorDAO {
 				this.statement = this.database.createStatement();
 			}
 			String values = "'" + administrador.getNomeCompleto() + "', "
-					+ "'true'" + ", "
+					+ "true" + ", "
 					+ "'" + Integer.toString(administrador.getMatricula()) + "', "
 					+ "'" + administrador.getEmail() + "', "
 					+ "'" + administrador.getTelefone() + "', "
@@ -49,7 +49,8 @@ public class JDBCAdministradorDAO extends JDBCDAO implements AdministradorDAO {
 				this.statement = this.database.createStatement();
 			}
 			this.resultSet = statement.executeQuery("SELECT * FROM funcionario WHERE " +
-					"nomeCompleto = '" + nome + "';");
+							"nomeCompleto = '" + nome + "' AND "
+							+ "eadmin = true;");
 			
 			while (resultSet.next()) {
 				administradores.add(new Administrador(
@@ -73,7 +74,7 @@ public class JDBCAdministradorDAO extends JDBCDAO implements AdministradorDAO {
 	}
 
 	@Override
-	public List<Administrador> listarPorMatricula(String matricula) {
+	public List<Administrador> listarPorMatricula(int matricula) {
 		List<Administrador> administradores = null;
 		try {
 			administradores = new ArrayList<Administrador>();
@@ -81,7 +82,8 @@ public class JDBCAdministradorDAO extends JDBCDAO implements AdministradorDAO {
 				this.statement = this.database.createStatement();
 			}
 			this.resultSet = statement.executeQuery("SELECT * FROM funcionario WHERE " +
-					"matricula = '" + matricula + "';");
+							"matricula = '" + matricula + "' AND "
+							+ "eadmin = true;");
 			
 			while (resultSet.next()) {
 				administradores.add(new Administrador(
@@ -113,7 +115,8 @@ public class JDBCAdministradorDAO extends JDBCDAO implements AdministradorDAO {
 				this.statement = this.database.createStatement();
 			}
 			this.resultSet = statement.executeQuery("SELECT * FROM funcionario WHERE " +
-					"email = '" + email + "';");
+							"email = '" + email + "' AND "
+							+ "eadmin = true;");
 			
 			while (resultSet.next()) {
 				administradores.add(new Administrador(
@@ -128,6 +131,7 @@ public class JDBCAdministradorDAO extends JDBCDAO implements AdministradorDAO {
 		}
 		catch (SQLException e) {
 			System.out.println("Não foi possível buscar o adminstrador. Verifique sua conexão com o banco de dados.");
+			System.out.println(e.getMessage());
 		}
 		catch (NullPointerException e) {
 			System.out.println("Não conectado ao banco de dados. Não foi possível buscar administradores.");
