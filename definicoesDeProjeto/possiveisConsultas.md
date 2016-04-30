@@ -6,4 +6,4 @@
 - [x] Consultar os administradores cadastrados por nome, matrícula ou e-mail.
 - [x] Atualizar os dados dos administradores (nome completo, número de matrícula, e-mail, telefone e habilitação).
 - [x] Consultar os funcionários que não são administradores (por nome, matrícula ou e-mail, quando for necessário mudar o administrador).
-- [ ] Atualizar o administrador (atualizar o campo 'eadmin' para true em algum funcionário não-administrador e atualizar o campo 'eadmin' pra false para algum administrador).
+- [x] Atualizar o administrador (atualizar o campo 'eadmin' para true em algum funcionário não-administrador e atualizar o campo 'eadmin' pra false para algum administrador).

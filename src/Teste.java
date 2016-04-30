@@ -25,7 +25,6 @@ public class Teste {
 		for (Funcionario funcionario : funcionarios) {
 			System.out.println(funcionario.toString());
 		}
-		/*
 		
 		dao.tornarAdministrador(funcionarios.get(0));
 		System.out.println("Funcionario " + funcionarios.get(0).toString() + " agora é um administrador");
@@ -36,7 +35,6 @@ public class Teste {
 		for (Funcionario funcionario : funcionarios) {
 			System.out.println(funcionario.toString());
 		}
-		*/
 				
 		dao.close();
 	}
