@@ -2,9 +2,7 @@ import java.sql.*;
 import java.util.List;
 import java.util.Scanner;
 
-import jdbc.JDBCAdministradorDAO;
 import jdbc.JDBCFuncionarioDAO;
-import model.Administrador;
 import model.Funcionario;
 
 public class Teste {

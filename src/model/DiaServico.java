@@ -1,14 +1,14 @@
 package model;
 
-import java.util.Date;
+import java.util.Calendar;
 
 public class DiaServico {
 	private int id;
-	private Date data;
+	private Calendar data;
 	private TipoServico tipoServico;
 	private int qtde;
 	
-	public DiaServico (int id, Date data, TipoServico tipoServico, int qtde) {
+	public DiaServico (int id, Calendar data, TipoServico tipoServico, int qtde) {
 		this.setId(id);
 		this.setData(data);
 		this.setTipoServico(tipoServico);
@@ -23,11 +23,11 @@ public class DiaServico {
 		this.id = id;
 	}
 
-	public Date getData() {
+	public Calendar getData() {
 		return data;
 	}
 
-	public void setData(Date data) {
+	public void setData(Calendar data) {
 		this.data = data;
 	}
 

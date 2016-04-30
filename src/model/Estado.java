@@ -1,14 +1,14 @@
 package model;
 
-import java.util.Date;
+import java.util.Calendar;
 
 public class Estado {
 	private int id;
-	private Date dataInicio;
-	private Date dataTermino;
+	private Calendar dataInicio;
+	private Calendar dataTermino;
 	private String descricao;
 	
-	public Estado (int id, Date dataInicio, Date dataTermino, String descricao) {
+	public Estado (int id, Calendar dataInicio, Calendar dataTermino, String descricao) {
 		this.setId(id);
 		this.setDataInicio(dataInicio);
 		this.setDataTermino(dataTermino);
@@ -17,8 +17,8 @@ public class Estado {
 	
 	public String toString() {
 		return (this.id + "\t"
-				+ (this.dataInicio.getYear() + 1900) + "/" + (this.dataInicio.getMonth() + 1) + "/" + this.dataInicio.getDate() + "\t"
-				+ (this.dataTermino.getYear() + 1900) + "/" + (this.dataTermino.getMonth() + 1) + "/" + this.dataTermino.getDate() + "\t"
+				+ this.dataInicio.get(Calendar.YEAR) + "/" + (this.dataInicio.get(Calendar.MONTH) + 1) + "/" + this.dataInicio.get(Calendar.DATE) + "\t"
+				+ this.dataTermino.get(Calendar.YEAR) + "/" + (this.dataTermino.get(Calendar.MONTH) + 1) + "/" + this.dataTermino.get(Calendar.DATE) + "\t"
 				+ this.descricao);
 	}
 
@@ -30,19 +30,19 @@ public class Estado {
 		this.id = id;
 	}
 
-	public Date getDataInicio() {
+	public Calendar getDataInicio() {
 		return dataInicio;
 	}
 
-	public void setDataInicio(Date dataInicio) {
+	public void setDataInicio(Calendar dataInicio) {
 		this.dataInicio = dataInicio;
 	}
 
-	public Date getDataTermino() {
+	public Calendar getDataTermino() {
 		return dataTermino;
 	}
 
-	public void setDataTermino(Date dataTermino) {
+	public void setDataTermino(Calendar dataTermino) {
 		this.dataTermino = dataTermino;
 	}
 

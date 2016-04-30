@@ -2,6 +2,7 @@ package jdbc;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import dao.FuncionarioDAO;
@@ -12,6 +13,8 @@ public class JDBCFuncionarioDAO extends JDBCDAO implements FuncionarioDAO {
 	@Override
 	public List<Funcionario> listar() {
 		List<Funcionario> funcionarios = null;
+		Calendar dataInicio = null;
+		Calendar dataTermino = null;
 		try {
 			funcionarios = new ArrayList<Funcionario>();
 			if (this.statement == null) {
@@ -24,6 +27,12 @@ public class JDBCFuncionarioDAO extends JDBCDAO implements FuncionarioDAO {
 					+ "eadmin = false;");
 			
 			while (this.resultSet.next()) {
+				dataInicio = Calendar.getInstance();
+				dataInicio.setTime(this.resultSet.getDate("datainicio"));
+				
+				dataTermino = Calendar.getInstance();
+				dataTermino.setTime(this.resultSet.getDate("datatermino"));
+				
 				funcionarios.add(new Funcionario(
 						this.resultSet.getInt("idfunc"),
 						this.resultSet.getString("nomecompleto"),
@@ -32,8 +41,8 @@ public class JDBCFuncionarioDAO extends JDBCDAO implements FuncionarioDAO {
 						this.resultSet.getString("telefone"),
 						this.resultSet.getInt("habilitacao"),
 						new Estado(this.resultSet.getInt("idestado"),
-								this.resultSet.getDate("datainicio"),
-								this.resultSet.getDate("datatermino"),
+								dataInicio,
+								dataTermino,
 								this.resultSet.getString("estadodescricao"))));
 			}
 		}
@@ -49,6 +58,8 @@ public class JDBCFuncionarioDAO extends JDBCDAO implements FuncionarioDAO {
 	@Override
 	public List<Funcionario> listarPorNome(String nome) {
 		List<Funcionario> funcionarios = null;
+		Calendar dataInicio = null;
+		Calendar dataTermino = null;
 		try {
 			funcionarios = new ArrayList<Funcionario>();
 			if (this.statement == null) {
@@ -61,6 +72,12 @@ public class JDBCFuncionarioDAO extends JDBCDAO implements FuncionarioDAO {
 					+ "eadmin = false;");
 			
 			while (this.resultSet.next()) {
+				dataInicio = Calendar.getInstance();
+				dataInicio.setTime(this.resultSet.getDate("datainicio"));
+				
+				dataTermino = Calendar.getInstance();
+				dataTermino.setTime(this.resultSet.getDate("datatermino"));
+				
 				funcionarios.add(new Funcionario(
 						this.resultSet.getInt("idfunc"),
 						this.resultSet.getString("nomecompleto"),
@@ -69,8 +86,8 @@ public class JDBCFuncionarioDAO extends JDBCDAO implements FuncionarioDAO {
 						this.resultSet.getString("telefone"),
 						this.resultSet.getInt("habilitacao"),
 						new Estado(this.resultSet.getInt("idestado"),
-								this.resultSet.getDate("datainicio"),
-								this.resultSet.getDate("datatermino"),
+								dataInicio,
+								dataTermino,
 								this.resultSet.getString("estadodescricao"))));
 			}
 		}
@@ -86,6 +103,8 @@ public class JDBCFuncionarioDAO extends JDBCDAO implements FuncionarioDAO {
 	@Override
 	public List<Funcionario> listarPorMatricula(int matricula) {
 		List<Funcionario> funcionarios = null;
+		Calendar dataInicio = null;
+		Calendar dataTermino = null;
 		try {
 			funcionarios = new ArrayList<Funcionario>();
 			if (this.statement == null) {
@@ -98,6 +117,12 @@ public class JDBCFuncionarioDAO extends JDBCDAO implements FuncionarioDAO {
 					+ "eadmin = false;");
 			
 			while (this.resultSet.next()) {
+				dataInicio = Calendar.getInstance();
+				dataInicio.setTime(this.resultSet.getDate("datainicio"));
+				
+				dataTermino = Calendar.getInstance();
+				dataTermino.setTime(this.resultSet.getDate("datatermino"));
+				
 				funcionarios.add(new Funcionario(
 						this.resultSet.getInt("idfunc"),
 						this.resultSet.getString("nomecompleto"),
@@ -106,8 +131,8 @@ public class JDBCFuncionarioDAO extends JDBCDAO implements FuncionarioDAO {
 						this.resultSet.getString("telefone"),
 						this.resultSet.getInt("habilitacao"),
 						new Estado(this.resultSet.getInt("idestado"),
-								this.resultSet.getDate("datainicio"),
-								this.resultSet.getDate("datatermino"),
+								dataInicio,
+								dataTermino,
 								this.resultSet.getString("estadodescricao"))));
 			}
 		}
@@ -123,6 +148,9 @@ public class JDBCFuncionarioDAO extends JDBCDAO implements FuncionarioDAO {
 	@Override
 	public List<Funcionario> listarPorEmail(String email) {
 		List<Funcionario> funcionarios = null;
+		Calendar dataInicio = null;
+		Calendar dataTermino = null;
+		
 		try {
 			funcionarios = new ArrayList<Funcionario>();
 			if (this.statement == null) {
@@ -135,6 +163,12 @@ public class JDBCFuncionarioDAO extends JDBCDAO implements FuncionarioDAO {
 					+ "eadmin = false;");
 			
 			while (this.resultSet.next()) {
+				dataInicio = Calendar.getInstance();
+				dataInicio.setTime(this.resultSet.getDate("datainicio"));
+				
+				dataTermino = Calendar.getInstance();
+				dataTermino.setTime(this.resultSet.getDate("datatermino"));
+				
 				funcionarios.add(new Funcionario(
 						this.resultSet.getInt("idfunc"),
 						this.resultSet.getString("nomecompleto"),
@@ -143,8 +177,8 @@ public class JDBCFuncionarioDAO extends JDBCDAO implements FuncionarioDAO {
 						this.resultSet.getString("telefone"),
 						this.resultSet.getInt("habilitacao"),
 						new Estado(this.resultSet.getInt("idestado"),
-								this.resultSet.getDate("datainicio"),
-								this.resultSet.getDate("datatermino"),
+								dataInicio,
+								dataTermino,
 								this.resultSet.getString("estadodescricao"))));
 			}
 		}
