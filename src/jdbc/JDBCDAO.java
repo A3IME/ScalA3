@@ -27,7 +27,7 @@ public abstract class JDBCDAO implements InterfaceDAO {
 		}
 		
 		try {
-			this.database = DriverManager.getConnection(url,user, password);
+			this.database = DriverManager.getConnection(url, user, password);
 			System.out.println("Conexão aberta");
 		} catch (SQLException e) {
 			System.out.println("Falha na autenticação ou no nome do banco de dados.");

@@ -1,5 +1,8 @@
 package model;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class Funcionario {
 	protected int id;
 	protected String nomeCompleto;
@@ -9,14 +12,26 @@ public class Funcionario {
 	protected int habilitacao;
 	protected Estado estado;
 	
-	public Funcionario (int id, String nomeCompleto, int matricula, String email, String telefone, int habilitacao, Estado estado) {
-		this.id = id;
+	public Funcionario (String nomeCompleto, int matricula, String email, String telefone, int habilitacao, Estado estado) {
+		this.id = -1;
 		this.nomeCompleto = nomeCompleto;
 		this.matricula = matricula;
 		this.email = email;
 		this.telefone = telefone;
 		this.habilitacao = habilitacao;
 		this.estado = estado;
+	}
+
+	public static Funcionario getFuncionarioFromDatabase(ResultSet resultSet) throws SQLException {
+		Funcionario funcionario = new Funcionario (resultSet.getString("nomecompleto"),
+				resultSet.getInt("matricula"),
+				resultSet.getString("email"),
+				resultSet.getString("telefone"),
+				resultSet.getInt("habilitacao"),
+				Estado.getEstadoFromDataBase(resultSet));
+		
+		funcionario.setId(resultSet.getInt("idfunc"));
+		return funcionario;
 	}
 	
 	public String toString() {
@@ -33,7 +48,7 @@ public class Funcionario {
 		return id;
 	}
 
-	public void setId(int id) {
+	protected void setId(int id) {
 		this.id = id;
 	}
 
