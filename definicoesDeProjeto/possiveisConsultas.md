@@ -10,7 +10,7 @@
 
 ##História 2: Eu, como administrador, devo ser capaz de adicionar e remover funcionários, bem como alterar seu status.
 
-- [ ] Inserir funcionário.
-- [ ] Remover funcionário.
-- [ ] Alterar estado de funcionário.
+- [x] Inserir funcionário.
+- [x] Remover funcionário.
+- [x] Alterar estado de funcionário.
 

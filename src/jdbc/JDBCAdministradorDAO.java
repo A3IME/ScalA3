@@ -7,36 +7,113 @@ import java.util.List;
 import Tools.Tools;
 import dao.AdministradorDAO;
 import model.Administrador;
+import model.Estado;
+import model.Funcionario;
 
 
 public class JDBCAdministradorDAO extends JDBCDAO implements AdministradorDAO {	
 	@Override
-	public boolean inserir(Administrador administrador) {
-		try{
+	public Administrador inserir(Administrador administrador) {
+		String comandoSQL;
+		try {
 			if (this.statement == null) {
 				this.statement = this.database.createStatement();
 			}
-			String values = "'" + administrador.getNomeCompleto() + "', "
-					+ "true" + ", "
-					+ "'" + Integer.toString(administrador.getMatricula()) + "', "
-					+ "'" + administrador.getEmail() + "', "
-					+ "'" + administrador.getTelefone() + "', "
-					+ "'" + Integer.toString(administrador.getHabilitacao()) + "',"
-					+ "'" + Tools.gerarSenha() + "'";
 			
-			return statement.execute("INSERT INTO " +
-					"funcionario " + 
-					"(nomeCompleto, eadmin, matricula, email, telefone, habilitacao, senha) " + 
-					"VALUES " + 
-					"(" + values + ");");
+			if (administrador.getEstado() == null) {
+				comandoSQL = "INSERT INTO funcionario "
+						+ "(nomecompleto, eadmin, matricula, email, telefone, habilitacao, senha) "
+						+ "VALUES ("
+						+ "'" + administrador.getNomeCompleto() + "', "
+						+ "true, "
+						+ administrador.getMatricula() + ", "
+						+ "'" + administrador.getEmail() + "', "
+						+ "'" + administrador.getTelefone() + "', "
+						+ administrador.getHabilitacao() + ", "
+						+ "'" + Tools.gerarSenha() + "') "
+						+ "RETURNING *;";
+				
+				this.resultSet =  this.statement.executeQuery(comandoSQL);
+				
+				if (this.resultSet.next()) {
+					return Administrador.getAdministradorFromDatabase(this.resultSet);
+				}
+				else {
+					return null;
+				}
+			}
+			else if (administrador.getEstado().getId() != -1) {
+				comandoSQL = "INSERT INTO funcionario "
+						+ "(nomecompleto, eadmin, idestado, matricula, email, telefone, habilitacao, senha) "
+						+ "VALUES ("
+						+ "'" + administrador.getNomeCompleto() + "', "
+						+ "true, "
+						+ administrador.getEstado().getId() + ", "
+						+ administrador.getMatricula() + ", "
+						+ "'" + administrador.getEmail() + "', "
+						+ "'" + administrador.getTelefone() + "', "
+						+ administrador.getHabilitacao() + ", "
+						+ "'" + Tools.gerarSenha() + "') "
+						+ "RETURNING *;";
+				
+				this.resultSet = this.statement.executeQuery(comandoSQL);
+				this.resultSet.next();
+				
+				comandoSQL = "SELECT * FROM "
+						+ "funcionario LEFT JOIN estado ON funcionario.idestado = estado.idestado "
+						+ "WHERE idfunc = " + this.resultSet.getInt("idfunc") + ";";
+				
+				this.resultSet = this.statement.executeQuery(comandoSQL);
+				
+				if (this.resultSet.next()) {
+					return Administrador.getAdministradorFromDatabase(this.resultSet);
+				}
+				else {
+					return null;
+				}
+			}
+			else {			//if funcionario.getEstado().getId() != 1
+				Estado estado = DataBaseManager.getEstadoManager().inserir(administrador.getEstado());
+				administrador.setEstado(estado);
+				
+				comandoSQL = "INSERT INTO funcionario "
+						+ "(nomecompleto, eadmin, idestado, matricula, email, telefone, habilitacao, senha) "
+						+ "VALUES ("
+						+ "'" + administrador.getNomeCompleto() + "', "
+						+ "true, "
+						+ administrador.getEstado().getId() + ", "
+						+ administrador.getMatricula() + ", "
+						+ "'" + administrador.getEmail() + "', "
+						+ "'" + administrador.getTelefone() + "', "
+						+ administrador.getHabilitacao() + ", "
+						+ "'" + Tools.gerarSenha() + "') "
+						+ "RETURNING *;";
+				
+				this.resultSet = this.statement.executeQuery(comandoSQL);
+				this.resultSet.next();
+				
+				comandoSQL = "SELECT * FROM "
+						+ "funcionario LEFT JOIN estado ON funcionario.idestado = estado.idestado "
+						+ "WHERE idfunc = " + this.resultSet.getInt("idfunc") + ";";
+				
+				this.resultSet = this.statement.executeQuery(comandoSQL);
+				
+				if (this.resultSet.next()) {
+					return Administrador.getAdministradorFromDatabase(this.resultSet);
+				}
+				else {
+					return null;
+				}
+			}
 		}
 		catch (SQLException e) {
+			System.out.println(e.getMessage());
 			System.out.println("Não foi possível inserir este administrador. Verifique se o administrador já foi inserido.");
-			return false;
+			return null;
 		}
 		catch (NullPointerException e) {
 			System.out.println("Não conectado ao banco de dados. Não foi possível inserir administrador");
-			return false;
+			return null;
 		}
 	}
 
@@ -48,19 +125,12 @@ public class JDBCAdministradorDAO extends JDBCDAO implements AdministradorDAO {
 			if (this.statement == null) {
 				this.statement = this.database.createStatement();
 			}
-			this.resultSet = statement.executeQuery("SELECT * FROM funcionario WHERE " +
+			this.resultSet = statement.executeQuery("SELECT * FROM funcionario LEFT JOIN estado ON funcionario.idestado = estado.idestado WHERE " +
 							"nomeCompleto = '" + nome + "' AND "
 							+ "eadmin = true;");
 			
-			while (resultSet.next()) {
-				administradores.add(new Administrador(
-						resultSet.getInt("idfunc"),
-						resultSet.getString("nomecompleto"),
-						resultSet.getInt("matricula"),
-						resultSet.getString("email"),
-						resultSet.getString("telefone"),
-						resultSet.getInt("habilitacao"),
-						null));
+			while (this.resultSet.next()) {
+				administradores.add(Administrador.getAdministradorFromDatabase(this.resultSet));
 			}
 		}
 		catch (SQLException e) {
@@ -81,22 +151,16 @@ public class JDBCAdministradorDAO extends JDBCDAO implements AdministradorDAO {
 			if (this.statement == null) {
 				this.statement = this.database.createStatement();
 			}
-			this.resultSet = statement.executeQuery("SELECT * FROM funcionario WHERE " +
+			this.resultSet = statement.executeQuery("SELECT * FROM funcionario LEFT JOIN estado ON funcionario.idestado = estado.idestado WHERE " +
 							"matricula = '" + matricula + "' AND "
 							+ "eadmin = true;");
 			
-			while (resultSet.next()) {
-				administradores.add(new Administrador(
-						resultSet.getInt("idfunc"),
-						resultSet.getString("nomecompleto"),
-						resultSet.getInt("matricula"),
-						resultSet.getString("email"),
-						resultSet.getString("telefone"),
-						resultSet.getInt("habilitacao"),
-						null));
+			while (this.resultSet.next()) {
+				administradores.add(Administrador.getAdministradorFromDatabase(this.resultSet));
 			}
 		}
 		catch (SQLException e) {
+			System.out.println(e.getMessage());
 			System.out.println("Não foi possível buscar o adminstrador. Verifique sua conexão com o banco de dados.");
 		}
 		catch (NullPointerException e) {
@@ -114,19 +178,12 @@ public class JDBCAdministradorDAO extends JDBCDAO implements AdministradorDAO {
 			if (this.statement == null) {
 				this.statement = this.database.createStatement();
 			}
-			this.resultSet = statement.executeQuery("SELECT * FROM funcionario WHERE " +
+			this.resultSet = statement.executeQuery("SELECT * FROM funcionario LEFT JOIN estado ON funcionario.idestado = estado.idestado WHERE " +
 							"email = '" + email + "' AND "
 							+ "eadmin = true;");
 			
-			while (resultSet.next()) {
-				administradores.add(new Administrador(
-						resultSet.getInt("idfunc"),
-						resultSet.getString("nomecompleto"),
-						resultSet.getInt("matricula"),
-						resultSet.getString("email"),
-						resultSet.getString("telefone"),
-						resultSet.getInt("habilitacao"),
-						null));
+			while (this.resultSet.next()) {
+				administradores.add(Administrador.getAdministradorFromDatabase(this.resultSet));
 			}
 		}
 		catch (SQLException e) {
