@@ -16,7 +16,7 @@
 					</tr>	
 				 	<tr>
 						<td style="padding-left:100px;">Senha:</td>
-						<td><input type="text" size="60" name="senha"></td>	
+						<td><input type="password" size="60" name="senha"></td>	
 					</tr>
 					<tr>
 						<td colspan="2" style="text-align:center">
