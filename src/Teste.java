@@ -3,9 +3,9 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Scanner;
 
-import jdbc.DataBaseManager;
-import jdbc.JDBCAdministradorDAO;
-import jdbc.JDBCFuncionarioDAO;
+import control.jdbc.DataBaseManager;
+import control.jdbc.JDBCAdministradorDAO;
+import control.jdbc.JDBCFuncionarioDAO;
 import model.Administrador;
 import model.Estado;
 import model.Funcionario;

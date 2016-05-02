@@ -1,11 +1,11 @@
-package jdbc;
+package control.jdbc;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import dao.EstadoDAO;
+import control.dao.EstadoDAO;
 import model.Estado;
 
 public class JDBCEstadoDAO extends JDBCDAO implements EstadoDAO {

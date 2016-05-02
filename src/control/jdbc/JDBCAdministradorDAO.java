@@ -1,14 +1,13 @@
-package jdbc;
+package control.jdbc;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import Tools.Tools;
-import dao.AdministradorDAO;
+import control.dao.AdministradorDAO;
 import model.Administrador;
 import model.Estado;
-import model.Funcionario;
 
 
 public class JDBCAdministradorDAO extends JDBCDAO implements AdministradorDAO {	

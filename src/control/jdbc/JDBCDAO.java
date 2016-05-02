@@ -1,4 +1,4 @@
-package jdbc;
+package control.jdbc;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import dao.InterfaceDAO;
+import control.dao.InterfaceDAO;
 
 public abstract class JDBCDAO implements InterfaceDAO {
 	protected String url;

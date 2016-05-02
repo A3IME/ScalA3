@@ -1,4 +1,4 @@
-package jdbc;
+package control.jdbc;
 
 public class DataBaseManager {
 	private static JDBCFuncionarioDAO funcionarioManager;

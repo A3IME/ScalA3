@@ -1,4 +1,4 @@
-package jdbc;
+package control.jdbc;
 
 import java.sql.SQLException;
 
@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Tools.Tools;
-import dao.EstadoDAO;
-import dao.FuncionarioDAO;
+import control.dao.EstadoDAO;
+import control.dao.FuncionarioDAO;
 import model.Estado;
 import model.Funcionario;
 
