@@ -15,7 +15,7 @@ public abstract class JDBCDAO implements InterfaceDAO {
 	protected ResultSet resultSet;
 	
 	@Override
-	public void open(String databaseName, String user, String password) {
+	public void open(String databaseName, String user, String password) throws SQLException {
 		this.url = "jdbc:postgresql://localhost:5432/" + databaseName;
 		
 		try {
@@ -26,12 +26,8 @@ public abstract class JDBCDAO implements InterfaceDAO {
 			System.err.println(e.getMessage());
 		}
 		
-		try {
-			this.database = DriverManager.getConnection(url, user, password);
-			System.out.println("Conexão aberta");
-		} catch (SQLException e) {
-			System.out.println("Falha na autenticação ou no nome do banco de dados.");
-		}
+		this.database = DriverManager.getConnection(url, user, password);
+		System.out.println("Conexão aberta");
 	}
 
 	@Override

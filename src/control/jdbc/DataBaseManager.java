@@ -1,11 +1,13 @@
 package control.jdbc;
 
+import java.sql.SQLException;
+
 public class DataBaseManager {
 	private static JDBCFuncionarioDAO funcionarioManager;
 	private static JDBCAdministradorDAO administradorManager;
 	private static JDBCEstadoDAO estadoManager;
 	
-	public static void open(String databaseName, String user, String password) {
+	public static void open(String databaseName, String user, String password) throws SQLException {
 		funcionarioManager = new JDBCFuncionarioDAO();
 		funcionarioManager.open(databaseName, user, password);
 		

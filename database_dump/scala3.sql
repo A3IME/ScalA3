@@ -227,6 +227,11 @@ ALTER TABLE ONLY tiposervico ALTER COLUMN idtiposervico SET DEFAULT nextval('tip
 --
 
 COPY estado (idestado, datainicio, datatermino, estadodescricao) FROM stdin;
+1	2016-04-29	2016-04-30	awesome
+2	2016-04-30	2016-05-01	awesome1
+3	2016-05-01	2016-06-20	a3imeeee
+4	2016-05-01	2016-06-20	a3imeeee
+5	2016-05-01	2020-02-01	andrade
 \.
 
 
@@ -234,7 +239,7 @@ COPY estado (idestado, datainicio, datatermino, estadodescricao) FROM stdin;
 -- Name: estado_idestado_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('estado_idestado_seq', 1, false);
+SELECT pg_catalog.setval('estado_idestado_seq', 5, true);
 
 
 --
@@ -242,12 +247,10 @@ SELECT pg_catalog.setval('estado_idestado_seq', 1, false);
 --
 
 COPY funcionario (idfunc, nomecompleto, eadmin, idestado, matricula, email, telefone, habilitacao, senha) FROM stdin;
-5	a	t	\N	20	c	d          	10	e
-6	a3ime	t	\N	10	a3ime@a3ime.com	66666666666	11	TODO
-18	a3ime	t	\N	11	a3ime1@a3ime.com	66666666667	12	TODO
-19	a3ime	t	\N	12	a3ime1@a3ime.com	66666666667	12	TODO
-20	a3ime	t	\N	30	a3ime1@a3ime.com	66666666667	12	TODO
-21	a3ime	t	\N	400	a3ime1@a3ime.com	66666666667	12	TODO
+35	y	f	\N	3	y	y          	1	y
+32	x	f	\N	1	x	x          	1	x
+29	a	t	1	2	c	d          	3	e
+49	andrade	t	5	13065	andrade@	aaaaaaaaaaa	10	TODO
 \.
 
 
@@ -255,7 +258,7 @@ COPY funcionario (idfunc, nomecompleto, eadmin, idestado, matricula, email, tele
 -- Name: funcionario_idfunc_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('funcionario_idfunc_seq', 23, true);
+SELECT pg_catalog.setval('funcionario_idfunc_seq', 50, true);
 
 
 --
