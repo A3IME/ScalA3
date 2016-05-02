@@ -1,0 +1,31 @@
+body {
+	background-color: lightgreen;
+	padding-top:70px;
+}
+
+img {
+	width:300px;
+	height:200px;
+	display: block;
+    margin-left: auto;
+    margin-right: auto;
+	
+}
+div {
+	background-color: lightblue;
+	height:500px;
+	width:500px;
+	border: 5px solid green;
+	border-radius:25px;
+	margin:auto;
+	font-family:Verdana;
+		
+	
+}
+
+input {
+	width: 50%;
+	border: 2px solid green;
+	border-radius: 2px;
+	
+}
