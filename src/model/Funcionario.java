@@ -6,6 +6,7 @@ import java.sql.SQLException;
 public class Funcionario {
 	protected int id;
 	protected String nomeCompleto;
+	protected boolean eadmin;
 	protected int matricula;
 	protected String email;
 	protected String telefone;
@@ -31,9 +32,12 @@ public class Funcionario {
 				Estado.getEstadoFromDataBase(resultSet));
 		
 		funcionario.setId(resultSet.getInt("idfunc"));
+		funcionario.setEadmin(resultSet.getBoolean("eadmin"));
 		return funcionario;
 	}
 	
+	
+
 	public String toString() {
 		return (this.id + "\t"
 				+ this.nomeCompleto + "\t"
@@ -43,7 +47,17 @@ public class Funcionario {
 				+ this.habilitacao + "\t"
 				+ (this.estado == null ? null : this.estado.toString()));
 	}
-
+	
+	public boolean getEadmin() {
+		return eadmin;
+		
+	}
+	
+	public void setEadmin(boolean eadmin) {
+		this.eadmin = eadmin;
+		
+	}
+	
 	public int getId() {
 		return id;
 	}

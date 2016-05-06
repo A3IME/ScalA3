@@ -7,7 +7,7 @@
 <body>
 	<div>
 		<img src="/ScalA3/images/scala3.png" id="img"/>
-		<form action="/ScalA3/SuperUsuarioServlet" method="post" class="center" >
+		<form action="/ScalA3/LoginServlet" method="post" class="center" >
 			<table>
 				<tbody>
 					<tr>
@@ -20,7 +20,9 @@
 					</tr>
 					<tr>
 						<td colspan="2" style="text-align:center">
-							<button type="submit" name="Enviar">Entrar</button>
+							<!-- Se mudar o value abaixo deve mudar no servlet -->
+							<input type="submit" name="logOp" value="Entrar">
+							<!--<button type="submit" name="Enviar">Entrar</button>-->
 						</td>
 					</tr>
 				</tbody>

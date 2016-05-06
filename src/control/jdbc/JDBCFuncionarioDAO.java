@@ -220,6 +220,33 @@ public class JDBCFuncionarioDAO extends JDBCDAO implements FuncionarioDAO {
 		}
 		return funcionarios;
 	}
+	
+	@Override
+	public List<Funcionario> listarLogin(String email, String senha) {
+		List<Funcionario> funcionarios = null;
+		try {
+			funcionarios = new ArrayList<Funcionario>();
+			if (this.statement == null) {
+				this.statement = this.database.createStatement();
+			}
+			
+			this.resultSet = this.statement.executeQuery("SELECT * "
+					+ "FROM funcionario LEFT JOIN estado ON funcionario.idestado = estado.idestado "
+					+ "WHERE email = '" + email + "' AND "
+					+ "senha = '" + senha +"';");
+			
+			while (this.resultSet.next()) {
+				funcionarios.add(Funcionario.getFuncionarioFromDatabase(this.resultSet));
+			}
+		}
+		catch (SQLException e) {
+			System.out.println("Não foi possível buscar o funcionário. Verifique sua conexão com o banco de dados.");
+		}
+		catch (NullPointerException e) {
+			System.out.println("Não conectado ao banco de dados. Não foi possível buscar funcionário.");
+		}
+		return funcionarios;
+	}
 
 	@Override
 	public boolean tornarAdministrador(Funcionario funcionario) {
