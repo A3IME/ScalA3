@@ -22,9 +22,21 @@ public class Funcionario {
 		this.habilitacao = habilitacao;
 		this.estado = estado;
 	}
+	
+	public Funcionario (String nomeCompleto, int matricula, String email, String telefone, int habilitacao, Estado estado, boolean eadmin) {
+		this.id = -1;
+		this.nomeCompleto = nomeCompleto;
+		this.matricula = matricula;
+		this.email = email;
+		this.telefone = telefone;
+		this.habilitacao = habilitacao;
+		this.estado = estado;
+		this.eadmin = eadmin;
+	}
 
 	public static Funcionario getFuncionarioFromDatabase(ResultSet resultSet) throws SQLException {
-		Funcionario funcionario = new Funcionario (resultSet.getString("nomecompleto"),
+		Funcionario funcionario = new Funcionario (
+				resultSet.getString("nomecompleto"),
 				resultSet.getInt("matricula"),
 				resultSet.getString("email"),
 				resultSet.getString("telefone"),

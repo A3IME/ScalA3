@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=US-ASCII"
+<%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -17,6 +17,7 @@ for(Cookie cookie : cookies){
 		System.out.println("#" + cookie.getName());
 	    if(cookie.getName().equals("logId")){
 	    	logId = cookie.getValue();
+	    	//print para controle apenas. apagar do projeto final
 	    	System.out.println(logId);
 	    }
 	}
@@ -33,12 +34,11 @@ else {
 	<a href="#">Inserir</a>
 	<a href="BuscarAdminSU.jsp">Buscar</a>
 	<form action="/ScalA3/LoginServlet" method="post">
-		<!-- Se mudar o value abaixo deve mudar no servlet -->
 		<input type="submit" name="logOp" value="Sair">
 	</form>
 	<hr/>
 	<br/>
-	<form method="post" action="ControleSU">
+	<form method="post" action="/ScalA3/SuperUsuarioServlet">
 		<p>Nome completo</p>
 		<input type="text" name="nome"/>
 		<p>Matricula</p>
@@ -47,10 +47,7 @@ else {
 		<input type="text" name="email"/>
 		<p>Telefone</p>
 		<input type="text" name="telefone"/>
-		<p>Senha</p>
-		<input type="password" name="senha"/><br/>
-		<input type="hidden" name="origem" value="inserir">
-		<input type="submit" value="Cadastrar"/>
+		<input type="submit" name="opt" value="Inserir"/>
 	</form>
 	
 

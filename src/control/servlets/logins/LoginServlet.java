@@ -55,6 +55,7 @@ public class LoginServlet extends HttpServlet {
 				//DataBaseManager.open(databaseName, user, password);
 				List<Funcionario> funcionarios = null;
 				funcionarios = funcionarioManager.listarLogin(user, password);
+				funcionarioManager.close();
 				
 				if(funcionarios.size() != 1)
 				{
@@ -114,7 +115,7 @@ public class LoginServlet extends HttpServlet {
 		        rd.forward(request, response);
 			}
 		}
-		else if(logOp.equals("Sair")) {
+		else {
 			HttpSession session = request.getSession(false);
 			session.invalidate();
 			response.sendRedirect("TelaLogin.jsp");

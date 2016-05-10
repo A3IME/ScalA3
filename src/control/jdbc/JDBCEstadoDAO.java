@@ -67,4 +67,29 @@ public class JDBCEstadoDAO extends JDBCDAO implements EstadoDAO {
 		
 		return null;
 	}
+	
+	public Estado listarPorId(int id) {
+		Estado estado = null;
+		
+		try {
+			if (this.statement == null) {
+				this.statement = this.database.createStatement();
+			}
+			
+			this.resultSet = this.statement.executeQuery("SELECT * FROM estado "
+					+ "WHERE idestado = " + id + ";");
+			
+			estado = Estado.getEstadoFromDataBase(this.resultSet);
+		
+			return estado;
+		}
+		catch (SQLException e) {
+			System.out.println("Não foi possível listar os estados. Verifique sua conexão com o banco de dados.");
+		}
+		catch (NullPointerException e) {
+			System.out.println("Não conectado ao banco de dados. Não foi possível buscar os estados.");
+		}
+		
+		return null;
+	}
 }
