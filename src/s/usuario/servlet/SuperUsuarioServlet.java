@@ -105,7 +105,7 @@ public class SuperUsuarioServlet extends HttpServlet {
 				response.sendRedirect("BuscarAdminSU.jsp");
 			}
 		}
-		else if(servOp.equals("Editar")) {
+		else if(servOp.equals("Editar dados")) {
 			Integer id;
 			String sOpt;
 			sOpt = request.getParameter("sOpt");
@@ -124,7 +124,7 @@ public class SuperUsuarioServlet extends HttpServlet {
 					request.setAttribute("funcionario", funcionario);
 					ServletContext app = this.getServletContext();
 			        RequestDispatcher rd = app.getRequestDispatcher("/EditarFuncionarioSU.jsp");
-			        System.out.println("Inicio");
+			        System.out.println("Editar inicio");
 			        rd.forward(request, response);
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
@@ -134,13 +134,40 @@ public class SuperUsuarioServlet extends HttpServlet {
 				}	
 			}
 			else if (sOpt.equals("concluir")) {
+				String nome, email, telefone;
+				Integer matricula, habilitacao;
+				boolean eadmin;
+				nome = request.getParameter("nome");
+				matricula = Integer.parseInt(request.getParameter("matricula"));
+				email = request.getParameter("email");
+				telefone = request.getParameter("telefone");
+				habilitacao = Integer.parseInt(request.getParameter("habilitacao"));
+				System.out.println(request.getParameter("eadmin"));
+				if(request.getParameter("eadmin") != null) {
+					eadmin = true;
+				}
+				else {
+					eadmin = false;
+				}
 				
+				Funcionario funcionario = new Funcionario(id, nome, matricula, email, telefone, habilitacao, null, eadmin);
+				
+				try {
+					JDBCFuncionarioDAO funcionarioManager = new JDBCFuncionarioDAO();
+					funcionarioManager.open(databaseName, dbUser, dbPassword);
+				
+					funcionarioManager.editar(funcionario);
+					
+					funcionarioManager.close();
+			        System.out.println("Editar concluido");
+					response.sendRedirect("BuscarAdminSU.jsp");
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					//e.printStackTrace();
+					System.out.println(e.getMessage());
+					response.sendRedirect("BuscarAdminSU.jsp");
+				}
 			}
-			
-			
-			
-			System.out.println("Editar");
-			response.sendRedirect("InserirAdminSU.jsp");
 		}
 		else if(servOp.equals("Excluir")) {
 			Integer id;
@@ -162,6 +189,10 @@ public class SuperUsuarioServlet extends HttpServlet {
 				System.out.println(e.getMessage());
 				response.sendRedirect("InserirAdminSU.jsp");
 			}
+		}
+		else if(servOp.equals("Editar estado")) {
+			System.out.println("Editar estado");
+			response.sendRedirect("EditarEstadoSU.jsp");;
 		}
 	}
 

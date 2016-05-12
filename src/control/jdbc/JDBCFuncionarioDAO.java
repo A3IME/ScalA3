@@ -414,96 +414,23 @@ public class JDBCFuncionarioDAO extends JDBCDAO implements FuncionarioDAO {
 				this.statement = this.database.createStatement();
 			}
 			
-			if (funcionario.getEstado() == null) {
-				comandoSQL = "INSERT INTO funcionario "
-						+ "(nomecompleto, eadmin, matricula, email, telefone, habilitacao, senha) "
-						+ "VALUES ("
-						+ "'" + funcionario.getNomeCompleto() + "', "
-						+ "false, "
-						+ funcionario.getMatricula() + ", "
-						+ "'" + funcionario.getEmail() + "', "
-						+ "'" + funcionario.getTelefone() + "', "
-						+ funcionario.getHabilitacao() + ", "
-						+ "'" + Tools.gerarSenha() + "') "
-						+ "RETURNING *;";
-				
-				this.resultSet =  this.statement.executeQuery(comandoSQL);
-				
-				if (this.resultSet.next()) {
-					return Funcionario.getFuncionarioFromDatabase(this.resultSet);
-				}
-				else {
-					return null;
-				}
-			}
-			else if (funcionario.getEstado().getId() != -1) {
-				comandoSQL = "INSERT INTO funcionario "
-						+ "(nomecompleto, eadmin, idestado, matricula, email, telefone, habilitacao, senha) "
-						+ "VALUES ("
-						+ "'" + funcionario.getNomeCompleto() + "', "
-						+ "false, "
-						+ funcionario.getEstado().getId() + ", "
-						+ funcionario.getMatricula() + ", "
-						+ "'" + funcionario.getEmail() + "', "
-						+ "'" + funcionario.getTelefone() + "', "
-						+ funcionario.getHabilitacao() + ", "
-						+ "'" + Tools.gerarSenha() + "') "
-						+ "RETURNING *;";
-				
-				this.resultSet = this.statement.executeQuery(comandoSQL);
-				this.resultSet.next();
-				
-				comandoSQL = "SELECT * FROM "
-						+ "funcionario LEFT JOIN estado ON funcionario.idestado = estado.idestado "
-						+ "WHERE idfunc = " + this.resultSet.getInt("idfunc") + ";";
-				
-				this.resultSet = this.statement.executeQuery(comandoSQL);
-				
-				if (this.resultSet.next()) {
-					return Funcionario.getFuncionarioFromDatabase(this.resultSet);
-				}
-				else {
-					return null;
-				}
-			}
-			else {			//if funcionario.getEstado().getId() != 1
-				Estado estado = DataBaseManager.getEstadoManager().inserir(funcionario.getEstado());
-				funcionario.setEstado(estado);
-				
-				comandoSQL = "INSERT INTO funcionario "
-						+ "(nomecompleto, eadmin, idestado, matricula, email, telefone, habilitacao, senha) "
-						+ "VALUES ("
-						+ "'" + funcionario.getNomeCompleto() + "', "
-						+ "false, "
-						+ funcionario.getEstado().getId() + ", "
-						+ funcionario.getMatricula() + ", "
-						+ "'" + funcionario.getEmail() + "', "
-						+ "'" + funcionario.getTelefone() + "', "
-						+ funcionario.getHabilitacao() + ", "
-						+ "'" + Tools.gerarSenha() + "') "
-						+ "RETURNING *;";
-				
-				this.resultSet = this.statement.executeQuery(comandoSQL);
-				this.resultSet.next();
-				
-				comandoSQL = "SELECT * FROM "
-						+ "funcionario LEFT JOIN estado ON funcionario.idestado = estado.idestado "
-						+ "WHERE idfunc = " + this.resultSet.getInt("idfunc") + ";";
-				
-				this.resultSet = this.statement.executeQuery(comandoSQL);
-				
-				if (this.resultSet.next()) {
-					return Funcionario.getFuncionarioFromDatabase(this.resultSet);
-				}
-				else {
-					return null;
-				}
-			}
+			comandoSQL = "UPDATE funcionario SET "
+					+ "nomecompleto = '" + funcionario.getNomeCompleto() + "', " 
+					+ "eadmin = " + funcionario.getEadmin() + ", "
+					+ "matricula = " + funcionario.getMatricula() + ", "
+					+ "email = '" + funcionario.getEmail() + "', "
+					+ "telefone = '" + funcionario.getTelefone() + "', "
+					+ "habilitacao = " + funcionario.getHabilitacao()
+					+ " WHERE idfunc=" + funcionario.getId() + ";";
+			
+			this.statement.executeQuery(comandoSQL);
+			
+			return true;
 		}
 		catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
 		
-		return null;
+		return false;
 	}
 }

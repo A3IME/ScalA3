@@ -1,10 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8" import="model.Funcionario"%>
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Editar administrador</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
 </head>
 <body>
 <%
@@ -47,24 +47,18 @@ if(request.getAttribute("funcionario") != null)
 	<hr/>
 	<br/>
 	<form method="post" action="/ScalA3/SuperUsuarioServlet">
-		<p>Nome completo</p>
-		<input type="text" name="nome" value="<%out.print(funcionario.getNomeCompleto());%>"  />
-		<p>Matricula</p>
-		<input type="text" name="matricula" value="<%out.print(funcionario.getMatricula());%>"/>
-		<p>Email</p>
-		<input type="text" name="email" value="<%out.print(funcionario.getEmail());%>"/>
-		<p>Telefone</p>
-		<input type="text" name="telefone" value="<%out.print(funcionario.getTelefone());%>"/>
-		<p>Habilitação</p>
-		<input type="text" name="habilitacao" value="<%out.print(funcionario.getHabilitacao());%>"/>
-		<p>Admin</p>
-		<input type="checkbox" name="eadmin" value="true"<%if(funcionario.getEadmin()){out.print("checked");}%>>
+		<p>Estado</p>
+		<p>Descrição</p>
+		<textarea rows="5" cols="50" name="descEstado"><%if(funcionario.getEstado() != null){out.print(funcionario.getEstado().getDescricao());} %></textarea>
+		<p>Início</p>
+		<input type="text" name="inicioEstado" value="<%if(funcionario.getEstado() != null){out.print(funcionario.getEstado().getDataInicio());}%>"/>
+		<p>Término</p>
+		<input type="text" name="inicioEstado" value="<%if(funcionario.getEstado() != null){out.print(funcionario.getEstado().getDataTermino());}%>"/>
 		<input type="hidden" name="id" value="<%out.print(funcionario.getId());%>">
 		<input type="hidden" name="sOpt" value="concluir">
 		<br>
-		<input type="submit" name="opt" value="Editar dados">
+		<input type="submit" name="opt" value="Editar estado">
 	</form>
-	
 
 </body>
 </html>

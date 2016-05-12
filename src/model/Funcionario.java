@@ -33,6 +33,17 @@ public class Funcionario {
 		this.estado = estado;
 		this.eadmin = eadmin;
 	}
+	
+	public Funcionario (int id, String nomeCompleto, int matricula, String email, String telefone, int habilitacao, Estado estado, boolean eadmin) {
+		this.id = id;
+		this.nomeCompleto = nomeCompleto;
+		this.matricula = matricula;
+		this.email = email;
+		this.telefone = telefone;
+		this.habilitacao = habilitacao;
+		this.estado = estado;
+		this.eadmin = eadmin;
+	}
 
 	public static Funcionario getFuncionarioFromDatabase(ResultSet resultSet) throws SQLException {
 		Funcionario funcionario = new Funcionario (
