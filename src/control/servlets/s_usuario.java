@@ -1,4 +1,4 @@
-package s.usuario.servlet;
+package control.servlets;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -23,13 +23,13 @@ import model.Funcionario;
  * Servlet implementation class SuperUsuarioServlet
  */
 @WebServlet("/SuperUsuarioServlet")
-public class SuperUsuarioServlet extends HttpServlet {
+public class s_usuario extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public SuperUsuarioServlet() {
+    public s_usuario() {
         super();
         // TODO Auto-generated constructor stub
     }

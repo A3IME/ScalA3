@@ -59,6 +59,7 @@ public class LoginServlet extends HttpServlet {
 				
 				if(funcionarios.size() != 1)
 				{
+					System.out.println(funcionarios.size());
 					request.setAttribute("falha_autenticacao", "Falha na autenticação.");
 					ServletContext app = this.getServletContext();
 			        RequestDispatcher rd = app.getRequestDispatcher("/TelaLogin.jsp");
