@@ -7,7 +7,7 @@ import model.FuncionarioHabilitado;
 public class FuncionarioComparator implements Comparator<FuncionarioHabilitado>{
 	private static FuncionarioComparator funcionarioComparatorInstance;
 	
-	public FuncionarioComparator getInstance() {
+	public static FuncionarioComparator getInstance() {
 		if (FuncionarioComparator.funcionarioComparatorInstance == null) {
 			FuncionarioComparator.funcionarioComparatorInstance = new FuncionarioComparator();
 		}
@@ -26,10 +26,10 @@ public class FuncionarioComparator implements Comparator<FuncionarioHabilitado>{
 		}
 		else {
 			if (o1.getClassificacao() < o2.getClassificacao()) {
-				return -1;
+				return 1;
 			}
 			else if (o1.getClassificacao() > o2.getClassificacao()) {
-				return 1;
+				return -1;
 			}
 			else {
 				return 0;

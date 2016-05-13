@@ -6,6 +6,13 @@ public class FuncionarioHabilitado {
 	private int classificacao;
 	private int qtdeServicosTirados;
 	
+	public FuncionarioHabilitado(int id, String nome, int classificacao, int qtdeServicosTirados) {
+		this.id = id;
+		this.nome = nome;
+		this.classificacao = classificacao;
+		this.qtdeServicosTirados = qtdeServicosTirados;
+	}
+	
 	public int getId() {
 		return id;
 	}
@@ -29,5 +36,12 @@ public class FuncionarioHabilitado {
 	}
 	public void setQtdeServicosTirados(int qtdeServicosTirados) {
 		this.qtdeServicosTirados = qtdeServicosTirados;
+	}
+
+	public String toString() {
+		return (this.id + "\t"
+				+ this.nome + "\t"
+				+ this.classificacao + "\t"
+				+ this.qtdeServicosTirados);
 	}
 }

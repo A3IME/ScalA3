@@ -3,31 +3,28 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Scanner;
 
+import Tools.FuncionarioComparator;
 import control.jdbc.DataBaseManager;
 import control.jdbc.JDBCAdministradorDAO;
 import control.jdbc.JDBCFuncionarioDAO;
+import control.jdbc.JDBCFuncionarioHabilitadoDAO;
 import model.Administrador;
 import model.Estado;
 import model.Funcionario;
+import model.FuncionarioHabilitado;
+import model.TipoServico;
 
 public class Teste {
 
 	public static void main(String[] args) throws SQLException {
-		String databaseName, user, password;
-		System.out.println("Digite o nome do banco de dados, o nome do usuário e a senha: ");
-		Scanner scanner = (new Scanner(System.in));
-		databaseName = scanner.next();
-		user = scanner.next();
-		password = scanner.next();
-		scanner.close();
-		
-		DataBaseManager.open(databaseName, user, password);
-		
-		List<Estado> estados = DataBaseManager.getEstadoManager().listar();
-		for (Estado estado : estados) {
-			System.out.println(estado.toString());
+		JDBCFuncionarioHabilitadoDAO funcionarioHabilitadoManager = new JDBCFuncionarioHabilitadoDAO();
+		funcionarioHabilitadoManager.open("scala3", "postgres", "postgres");
+		TipoServico tipoServico = new TipoServico(0, "SgtDia", "preta");
+		List<FuncionarioHabilitado> funcionariosHabilitados = funcionarioHabilitadoManager.listarFuncionariosHabilitados(tipoServico);
+		funcionariosHabilitados.sort(FuncionarioComparator.getInstance());
+		for (FuncionarioHabilitado funcionarioHabilitado : funcionariosHabilitados) {
+			System.out.println(funcionarioHabilitado);
 		}
-				
-		DataBaseManager.close();
+		funcionarioHabilitadoManager.close();
 	}
 }
