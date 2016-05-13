@@ -26,11 +26,15 @@ public class JDBCFuncionarioHabilitadoDAO extends JDBCDAO implements Funcionario
 					+ "AND (idtiposervico = " + tipoServico.getId() + " OR idtiposervico is null) "
 					+ "GROUP BY idfunc, idtiposervico;");
 			
+			System.out.println("++++++++");
+			System.out.println(tipoServico.getId());
+			System.out.println("++++++++");
 			while (this.resultSet.next()) {
 				result.add(new FuncionarioHabilitado(this.resultSet.getInt("idfunc"), 
 						this.resultSet.getString("nomecompleto"), 
 						this.resultSet.getInt("classificacao"), 
 						this.resultSet.getInt("count")));
+				System.out.println("&&" + resultSet.getString("idfunc") + "-" + resultSet.getString("count"));
 			}
 		}
 		catch (SQLException e) {
