@@ -7,6 +7,8 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -14,8 +16,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import Tools.FuncionarioComparator;
+import control.jdbc.JDBCAdministradorDAO;
+import control.jdbc.JDBCFuncionarioDAO;
 import control.jdbc.JDBCFuncionarioHabilitadoDAO;
+import model.Administrador;
 import model.DiaServico;
+import model.Funcionario;
 import model.FuncionarioHabilitado;
 import model.TipoServico;
 
@@ -43,10 +49,158 @@ public class AdminServlet extends HttpServlet {
 		String databaseName = "scala3";
 		String dbUser = "postgres", dbPassword = "postgres";
 		
-		servOp = "Gerar"; //APAGAR DEPOIS DOS TESTES!!!
-		//servOp = (String)request.getParameter("opt");
+		servOp = (String)request.getParameter("opt");
 		
-		if(servOp.equals("Gerar")) {
+		if(servOp.equals("Inserir")) {
+			String nome, matricula, email, telefone, senha;
+			nome = (String)request.getParameter("nome");
+			matricula = (String)request.getParameter("matricula");
+			email = (String)request.getParameter("email");
+			telefone = (String)request.getParameter("telefone");
+			
+			try {
+				JDBCFuncionarioDAO funcionarioManager = new JDBCFuncionarioDAO();
+				funcionarioManager.open(databaseName, dbUser, dbPassword);
+				
+				Funcionario funcionario = new Funcionario(nome, Integer.parseInt(matricula), email, telefone, 0, null);
+				funcionarioManager.inserir(funcionario);
+				funcionarioManager.close();
+				System.out.println("Inserido!");
+				response.sendRedirect("InserirFuncionarioADMIN.jsp");
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				//e.printStackTrace();
+				System.out.println(e.getMessage());
+				response.sendRedirect("InserirFuncionarioADMIN.jsp");
+			}
+				
+			
+			
+		} 
+		else if(servOp.equals("Buscar")) {
+			String valor, campo;
+			valor = (String)request.getParameter("valor");
+			campo = (String)request.getParameter("campo");
+			List<Funcionario> funcionarios = null;
+			funcionarios = new ArrayList<Funcionario>();
+			
+			try {
+				JDBCFuncionarioDAO funcionarioManager = new JDBCFuncionarioDAO();
+				funcionarioManager.open(databaseName, dbUser, dbPassword);
+				
+				if(campo.equals("id")){
+					funcionarios = funcionarioManager.listaAproximadaPorId(valor, false);  
+				}
+				else if(campo.equals("nome")){
+					funcionarios = funcionarioManager.listaAproximadaPorNome(valor, false);
+				}
+				else if(campo.equals("matricula")){
+					funcionarios = funcionarioManager.listaAproximadaPorMatricula(valor, false);
+				}
+				funcionarioManager.close();
+				request.setAttribute("funcionarios", funcionarios);
+				ServletContext app = this.getServletContext();
+		        RequestDispatcher rd = app.getRequestDispatcher("/ResultadoBuscaADMIN.jsp");
+		        System.out.println("Buscar");
+		        rd.forward(request, response);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				//e.printStackTrace();
+				System.out.println(e.getMessage());
+				response.sendRedirect("BuscarFuncionaioADMIN.jsp");
+			}
+		}
+		else if(servOp.equals("Editar dados")) {
+			Integer id;
+			String sOpt;
+			sOpt = request.getParameter("sOpt");
+			id = Integer.parseInt(request.getParameter("id"));
+			
+			System.out.println("Editar dados");
+			if(sOpt.equals("iniciar")) {
+				try {
+					JDBCFuncionarioDAO funcionarioManager = new JDBCFuncionarioDAO();
+					funcionarioManager.open(databaseName, dbUser, dbPassword);
+					Funcionario funcionario;
+					
+					funcionario = funcionarioManager.listarPorId(id);  
+					
+					funcionarioManager.close();
+					request.setAttribute("funcionario", funcionario);
+					ServletContext app = this.getServletContext();
+			        RequestDispatcher rd = app.getRequestDispatcher("/EditarFuncionarioADMIN.jsp");
+			        System.out.println("Editar inicio");
+			        rd.forward(request, response);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					//e.printStackTrace();
+					System.out.println(e.getMessage());
+					response.sendRedirect("BuscarFcunionarioADMIN.jsp");
+				}	
+			}
+			else if (sOpt.equals("concluir")) {
+				String nome, email, telefone;
+				Integer matricula, habilitacao;
+				boolean eadmin;
+				nome = request.getParameter("nome");
+				matricula = Integer.parseInt(request.getParameter("matricula"));
+				email = request.getParameter("email");
+				telefone = request.getParameter("telefone");
+				habilitacao = Integer.parseInt(request.getParameter("habilitacao"));
+				/*System.out.println(request.getParameter("eadmin"));
+				if(request.getParameter("eadmin") != null) {
+					eadmin = true;
+				}
+				else {
+					eadmin = false;
+				}*/
+				
+				Funcionario funcionario = new Funcionario(id, nome, matricula, email, telefone, habilitacao, null, false);
+				
+				try {
+					JDBCFuncionarioDAO funcionarioManager = new JDBCFuncionarioDAO();
+					funcionarioManager.open(databaseName, dbUser, dbPassword);
+				
+					funcionarioManager.editar(funcionario);
+					
+					funcionarioManager.close();
+			        System.out.println("Editar concluido");
+					response.sendRedirect("BuscarFuncionarioADMIN.jsp");
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					//e.printStackTrace();
+					System.out.println(e.getMessage());
+					response.sendRedirect("BuscarFuncionarioADMIN.jsp");
+				}
+			}
+		}
+		else if(servOp.equals("Excluir")) {
+			Integer id;
+			id = Integer.parseInt(request.getParameter("id"));
+			
+			try {
+				JDBCFuncionarioDAO funcionarioManager = new JDBCFuncionarioDAO();
+				funcionarioManager.open(databaseName, dbUser, dbPassword);
+				
+				funcionarioManager.remover(id);
+			
+				funcionarioManager.close();
+				System.out.println("Excluir");
+				response.sendRedirect("BuscarFuncionarioADMIN.jsp");
+					
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				//e.printStackTrace();
+				System.out.println(e.getMessage());
+				response.sendRedirect("InserirFuncionarioADMIN.jsp");
+			}
+		}
+		else if(servOp.equals("Editar estado")) {
+			System.out.println("Editar estado");
+			response.sendRedirect("EditarEstadoADMIN.jsp");;
+		}
+		else if(servOp.equals("Gerar")) {
 			List<String> servicos = new ArrayList<String>();
 			List<Integer> ids = new ArrayList<Integer>();
 			TipoServico tipoServico = new TipoServico(0,"a","a");
@@ -63,8 +217,8 @@ public class AdminServlet extends HttpServlet {
 			tipoServico.setCor(cor);
 			
 			try{
-				JDBCFuncionarioHabilitadoDAO funcHab = new JDBCFuncionarioHabilitadoDAO();
-				funcHab.open(databaseName, dbUser, dbPassword);
+				JDBCFuncionarioHabilitadoDAO funcionariosHabilitados = new JDBCFuncionarioHabilitadoDAO();
+				funcionariosHabilitados.open(databaseName, dbUser, dbPassword);
 				HashMap<String, List<FuncionarioHabilitado>> filasFunionarios = new HashMap<String, List<FuncionarioHabilitado>>();
 				
 				int i = 0;
@@ -72,7 +226,7 @@ public class AdminServlet extends HttpServlet {
 					tipoServico.setFuncao(servico);
 					tipoServico.setId(ids.get(i));
 					//^ FAZER METODO Q PEGA ID DO BD E SALVA DIRETO
-					filasFunionarios.put(servico, funcHab.listarFuncionariosHabilitados(tipoServico));
+					filasFunionarios.put(servico, funcionariosHabilitados.listarFuncionariosHabilitados(tipoServico));
 					filasFunionarios.get(servico).sort(FuncionarioComparator.getInstance());
 					i++;
 				}

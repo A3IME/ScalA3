@@ -91,7 +91,7 @@ public class LoginServlet extends HttpServlet {
 					{
 						//Máximo de 30 min de inatividade
 						session.setMaxInactiveInterval(30*60);
-						//response.sendRedirect(PAGINA ADMINISTRADOR);
+						response.sendRedirect("InserirFuncionarioADMIN.jsp");
 						//FAZER ADMIN
 					}
 					else

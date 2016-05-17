@@ -84,13 +84,13 @@ public class S_usuarioServlet extends HttpServlet {
 				funcionarioManager.open(databaseName, dbUser, dbPassword);
 				
 				if(campo.equals("id")){
-					funcionarios = funcionarioManager.listaAproximadaPorId(valor);  
+					funcionarios = funcionarioManager.listaAproximadaPorId(valor, true);  
 				}
 				else if(campo.equals("nome")){
-					funcionarios = funcionarioManager.listaAproximadaPorNome(valor);
+					funcionarios = funcionarioManager.listaAproximadaPorNome(valor, true);
 				}
 				else if(campo.equals("matricula")){
-					funcionarios = funcionarioManager.listaAproximadaPorMatricula(valor);
+					funcionarios = funcionarioManager.listaAproximadaPorMatricula(valor, true);
 				}
 				funcionarioManager.close();
 				request.setAttribute("funcionarios", funcionarios);

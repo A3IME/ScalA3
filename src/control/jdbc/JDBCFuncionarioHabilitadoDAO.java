@@ -17,15 +17,23 @@ public class JDBCFuncionarioHabilitadoDAO extends JDBCDAO implements Funcionario
 				this.statement = this.database.createStatement();
 			}
 			
-			this.resultSet = this.statement.executeQuery("SELECT idfunc, nomecompleto, classificacao, count(idservico) "
+			/*this.resultSet = this.statement.executeQuery("SELECT idfunc, nomecompleto, classificacao, count(idservico) "
 					+ "FROM (funcionario NATURAL LEFT JOIN "
 					+ "(servico_funcionario NATURAL INNER JOIN servico)) "
 					+ "WHERE idfunc != 0 "
 					+ "AND eadmin = false "
 					+ "AND habilitacao & " + (int)Math.pow(2, tipoServico.getId()) + " != 0 "
 					+ "AND (idtiposervico = " + tipoServico.getId() + " OR idtiposervico is null) "
-					+ "GROUP BY idfunc, idtiposervico;");
+					+ "GROUP BY idfunc, idtiposervico;");*/
+			System.out.println("///////////");
+			System.out.println(tipoServico.getId());
+			System.out.println("///////////");
+			this.resultSet = this.statement.executeQuery("SELECT DISTINCT * FROM (funcionario NATURAL LEFT JOIN "
+					+ "(SELECT idfunc, idtiposervico, count(idservico) "
+					+ "FROM servico_funcionario NATURAL INNER JOIN servico WHERE idtiposervico = " + tipoServico.getId() + " GROUP BY idfunc, idtiposervico) AS temp) "
+					+ "WHERE idfunc!=0 AND eadmin=false AND habilitacao&(1<<"+ tipoServico.getId() +") != 0;");	
 			
+						
 			System.out.println("++++++++");
 			System.out.println(tipoServico.getId());
 			System.out.println("++++++++");

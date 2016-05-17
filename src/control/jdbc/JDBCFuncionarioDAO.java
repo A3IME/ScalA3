@@ -167,7 +167,7 @@ public class JDBCFuncionarioDAO extends JDBCDAO implements FuncionarioDAO {
 		return funcionarios;
 	}
 	
-	public List<Funcionario> listaAproximadaPorNome(String nome) {
+	public List<Funcionario> listaAproximadaPorNome(String nome, boolean todos) {
 		List<Funcionario> funcionarios = null;
 		try {
 			funcionarios = new ArrayList<Funcionario>();
@@ -175,10 +175,16 @@ public class JDBCFuncionarioDAO extends JDBCDAO implements FuncionarioDAO {
 				this.statement = this.database.createStatement();
 			}
 			
-			this.resultSet = this.statement.executeQuery("SELECT * "
+			if(todos){
+				this.resultSet = this.statement.executeQuery("SELECT * "
 					+ "FROM funcionario LEFT JOIN estado ON funcionario.idestado = estado.idestado "
 					+ "WHERE nomecompleto LIKE '%" + nome + "%' AND idfunc != 0;");
-			
+			}
+			else {
+				this.resultSet = this.statement.executeQuery("SELECT * "
+						+ "FROM funcionario LEFT JOIN estado ON funcionario.idestado = estado.idestado "
+						+ "WHERE nomecompleto LIKE '%" + nome + "%' AND idfunc != 0 AND NOT eadmin;");
+			}
 			while (this.resultSet.next()) {
 				funcionarios.add(Funcionario.getFuncionarioFromDatabase(this.resultSet));
 			}
@@ -219,7 +225,7 @@ public class JDBCFuncionarioDAO extends JDBCDAO implements FuncionarioDAO {
 		return funcionarios;
 	}
 
-	public List<Funcionario> listaAproximadaPorMatricula(String matricula) {
+	public List<Funcionario> listaAproximadaPorMatricula(String matricula, boolean todos) {
 		List<Funcionario> funcionarios = null;
 		try {
 			funcionarios = new ArrayList<Funcionario>();
@@ -227,10 +233,16 @@ public class JDBCFuncionarioDAO extends JDBCDAO implements FuncionarioDAO {
 				this.statement = this.database.createStatement();
 			}
 			
-			this.resultSet = this.statement.executeQuery("SELECT * "
+			if(todos){
+				this.resultSet = this.statement.executeQuery("SELECT * "
 					+ "FROM funcionario LEFT JOIN estado ON funcionario.idestado = estado.idestado "
 					+ "WHERE CAST(matricula AS TEXT) LIKE '%" + matricula + "%' AND idfunc != 0;");
-			
+			}
+			else{
+				this.resultSet = this.statement.executeQuery("SELECT * "
+						+ "FROM funcionario LEFT JOIN estado ON funcionario.idestado = estado.idestado "
+						+ "WHERE CAST(matricula AS TEXT) LIKE '%" + matricula + "%' AND idfunc != 0 AND NOT eadmin;");
+			}
 			while (this.resultSet.next()) {
 				funcionarios.add(Funcionario.getFuncionarioFromDatabase(this.resultSet));
 			}
@@ -271,7 +283,7 @@ public class JDBCFuncionarioDAO extends JDBCDAO implements FuncionarioDAO {
 	}
 
 	
-	public List<Funcionario> listaAproximadaPorId(String id) {
+	public List<Funcionario> listaAproximadaPorId(String id, boolean todos) {
 		List<Funcionario> funcionarios = null;
 		try {
 			funcionarios = new ArrayList<Funcionario>();
@@ -279,15 +291,23 @@ public class JDBCFuncionarioDAO extends JDBCDAO implements FuncionarioDAO {
 				this.statement = this.database.createStatement();
 			}
 			
-			this.resultSet = this.statement.executeQuery("SELECT * "
+			if(todos){
+				this.resultSet = this.statement.executeQuery("SELECT * "
 					+ "FROM funcionario LEFT JOIN estado ON funcionario.idestado = estado.idestado "
 					+ "WHERE CAST(idfunc AS TEXT) LIKE '%" + id + "%' AND idfunc != 0;");
+			}
+			else{
+				this.resultSet = this.statement.executeQuery("SELECT * "
+						+ "FROM funcionario LEFT JOIN estado ON funcionario.idestado = estado.idestado "
+						+ "WHERE CAST(idfunc AS TEXT) LIKE '%" + id + "%' AND idfunc != 0 AND NOT eadmin;");	
+			}
 			
 			while (this.resultSet.next()) {
 				funcionarios.add(Funcionario.getFuncionarioFromDatabase(this.resultSet));
 			}
 		}
 		catch (SQLException e) {
+			System.out.println(e.toString());
 			System.out.println("Não foi possível buscar o funcionário. Verifique sua conexão com o banco de dados.");
 		}
 		catch (NullPointerException e) {

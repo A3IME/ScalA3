@@ -8,7 +8,7 @@
 </head>
 <body>
 	<form action="/ScalA3/AdminServlet" method="post" class="center" >
-		<input type="submit" value="testar">
+		<input type="submit" name="opt" value="Gerar">
 	</form>
 
 </body>
