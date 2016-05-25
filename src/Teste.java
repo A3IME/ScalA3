@@ -19,7 +19,7 @@ public class Teste {
 		databaseName = scanner.next();
 		user = scanner.next();
 		password = scanner.next();
-		scanner.close();
+		scanner.close();	
 		
 		DataBaseManager.open(databaseName, user, password);
 		
