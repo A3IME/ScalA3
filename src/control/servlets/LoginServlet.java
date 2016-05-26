@@ -98,7 +98,7 @@ public class LoginServlet extends HttpServlet {
 					{
 						//Máximo de 30 min de inatividade
 						session.setMaxInactiveInterval(30*60);
-						//response.sendRedirect(PAGINA FUNCIONARIO);
+						response.sendRedirect("VisualizarEscalaFUNCIONARIO.jsp");
 						//FAZER FUNCIONARIO COMUM
 					}
 					

@@ -1,11 +1,15 @@
 package model;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TreeSet;
 
-public class DiaServico {
+import control.jdbc.JDBCDAO;
+
+public class DiaServico extends JDBCDAO{
 	private int id;
 	private Calendar data;
 	private String cor;
@@ -20,6 +24,10 @@ public class DiaServico {
 		this.setTipoServico(tipo);
 		this.setQtdeServico(qtd);
 		this.pessoasServico = new HashMap<String, List<Integer>>();
+	}
+	
+	public DiaServico(){
+		
 	}
 
 	public int getId() {
@@ -54,20 +62,62 @@ public class DiaServico {
 		this.qtdServico = qtd;
 	}
 	
-	public void gerarEscalaDia(HashMap<String, List<FuncionarioHabilitado>> filasFunionarios) {
+	public HashMap<String, List<Integer>> getPessoasServico(){
+		return pessoasServico;
+	}
+	
+	public List<Integer> gerarEscalaDia(HashMap<String, List<FuncionarioHabilitado>> filasFunionarios, List<List<Integer>> escalasDiasAnteriores) {
+		TreeSet<Integer> funcionariosNaoDisponiveis = new TreeSet<Integer>();
+		List<Integer> funcionariosServicoHoje = new ArrayList<Integer>();
+		for(List<Integer> tempList : escalasDiasAnteriores) {
+			funcionariosNaoDisponiveis.addAll(tempList);
+		}
+		
 		System.out.println("#" + filasFunionarios);
 		for(String tipo : tipoServico){
 			System.out.println("##" + tipo);
 			pessoasServico.put(tipo, new ArrayList<Integer>());
 			int i;
 			for(i = 0; i < qtdServico.get(tipo); i++) {
-				System.out.println(pessoasServico.get(tipo));
-				pessoasServico.get(tipo).add(filasFunionarios.get(tipo).get(0).getId());
+				if(funcionariosNaoDisponiveis.contains(filasFunionarios.get(tipo).get(0).getId())){
+					i--;
+				} 
+				else{
+					//System.out.println(pessoasServico.get(tipo));
+					pessoasServico.get(tipo).add(filasFunionarios.get(tipo).get(0).getId());
+					filasFunionarios.get(tipo).get(0).incrementaQtdServicos();
+					funcionariosNaoDisponiveis.add(filasFunionarios.get(tipo).get(0).getId());
+					funcionariosServicoHoje.add(filasFunionarios.get(tipo).get(0).getId());
+				}
 				filasFunionarios.get(tipo).add(filasFunionarios.get(tipo).remove(0));
 			}
 			
 		}
 		
+		System.out.println("###" + filasFunionarios);
+		return funcionariosServicoHoje;
+		
+	}
+	
+	public List<Integer> getFuncionariosServicoDia(Calendar dia) {
+		  //List<FuncionarioHabilitado> funcionariosServicoDia = new
+		  //ArrayList<FuncionarioHabilitado>();
+		try{
+			List<Integer> funcionariosServicoDia = new ArrayList<Integer>();
+			String diaString = new SimpleDateFormat("yyyy-MM-dd").format(dia.getTime());
+			this.resultSet = this.statement.executeQuery("SELECT idfunc "
+			+ "FROM servico_funcionario "
+			+ "NATURAL JOIN (SELECT idfunc FROM servico WHERE data='" + diaString + "') AS servico");
+			
+			while (this.resultSet.next()) {
+				funcionariosServicoDia.add(this.resultSet.getInt("idfunc"));
+			}
+			
+			return funcionariosServicoDia;
+	
+		}catch(Exception e){
+			return new ArrayList<Integer>();
+		}
 	}
 	
 	public void printEscalaDia() {
@@ -93,4 +143,56 @@ public class DiaServico {
 	public void setCor(String cor) {
 		this.cor = cor;
 	}
+
+	public List<DiaServico> listarEscala(String dataInicial, String dataFinal) {
+		List<DiaServico> dias = new ArrayList<DiaServico>();
+		
+		try{
+			this.resultSet = this.statement.executeQuery("SELECT idservico, data, cor "
+					+ "FROM servico NATURAL JOIN tiposervico "
+					+ "WHERE data > '" + dataInicial + "' AND data < '" + dataFinal + "';");
+			
+		while (this.resultSet.next()) {
+			DiaServico tempDia = new DiaServico();
+			Calendar tempCalendar = Calendar.getInstance();
+			tempDia.setCor(this.resultSet.getString("cor"));
+			tempCalendar.setTime(this.resultSet.getDate("data"));
+			tempDia.setData(tempCalendar);
+			tempDia.setId(this.resultSet.getInt("idservico"));
+			dias.add(tempDia);
+		}
+		
+		for(DiaServico dia : dias){
+			this.resultSet = this.statement.executeQuery("SELECT funcao FROM servico NATURAL JOIN tiposervico "
+					+ "WHERE idservico = " + dia.getId() + ";");
+			
+			List<String> tempFuncao = new ArrayList<String>();
+			
+			while(this.resultSet.next()){
+				tempFuncao.add(this.resultSet.getString("funcao"));
+			}
+			
+			for(String funcao : tempFuncao){
+				List<Integer> tempFuncionario = new ArrayList<Integer>();
+				this.resultSet = this.statement.executeQuery("SELECT idfunc FROM tiposervico NATURAL JOIN "
+						+ "(SELECT * FROM servico_funcionario NATURAL JOIN servico) "
+						+ "AS temp WHERE idservico = " + dia.getId() + " "
+						+ "AND funcao = '" + funcao + "';");
+				while(this.resultSet.next()){
+					tempFuncionario.add(this.resultSet.getInt("idfunc"));
+				}
+				dia.getPessoasServico().put(funcao, tempFuncionario);
+				
+			}
+			dia.setTipoServico(tempFuncao);
+		}
+		
+		
+		
+		}catch(Exception e){
+			return null;
+		}
+		return dias;
+	}
+	
 }

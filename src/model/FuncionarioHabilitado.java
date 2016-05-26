@@ -37,6 +37,10 @@ public class FuncionarioHabilitado {
 	public void setQtdeServicosTirados(int qtdeServicosTirados) {
 		this.qtdeServicosTirados = qtdeServicosTirados;
 	}
+	
+	public void incrementaQtdServicos(){
+		this.qtdeServicosTirados++;
+	}
 
 	public String toString() {
 		return (this.id + "\t"

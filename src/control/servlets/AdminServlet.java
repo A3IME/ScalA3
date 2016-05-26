@@ -237,7 +237,18 @@ public class AdminServlet extends HttpServlet {
 				qtds.put(servicos.get(1), 1);
 				DiaServico diaServico = new DiaServico(0, cor, data, servicos, qtds);
 				
-				diaServico.gerarEscalaDia(filasFunionarios);
+				diaServico.open(databaseName, dbUser, dbPassword);
+				
+				List<List<Integer>> pessoalServicoAnteriores = new ArrayList<List<Integer>>();
+				Calendar dia = Calendar.getInstance();
+				
+				
+				for(i = 0; i < 2; i++){
+					dia.add(Calendar.DATE, -1);
+					pessoalServicoAnteriores.add(diaServico.getFuncionariosServicoDia(dia));
+				}
+				
+				diaServico.gerarEscalaDia(filasFunionarios, pessoalServicoAnteriores);
 				diaServico.printEscalaDia();
 				
 						
