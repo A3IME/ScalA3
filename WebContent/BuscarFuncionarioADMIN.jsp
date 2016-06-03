@@ -3,6 +3,8 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<meta HTTP-EQUIV=Expires CONTENT="0">   
+		<meta HTTP-EQUIV="Pragma" CONTENT="no-cache">  
 	    <meta charset="utf-8">
 	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
 	    <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -17,6 +19,14 @@
 	</head>
 <body>
 <%
+if (request.getAttribute("alert") != null) {
+	%>
+	<script>
+		alert("<%= (String)request.getAttribute("alert") %>");
+	</script>
+<%
+request.removeAttribute("alert");
+}
 //Controle de acessos	
 String nome = null;
 String logId = null;
@@ -51,6 +61,8 @@ else {
 		   	<ul class="nav navbar-nav">
 				<li><a href="InserirFuncionarioADMIN.jsp">Inserir</a></li>
 				<li><a href="#">Buscar</a></li>
+				<li><a href="ConsultarEscalaADMIN.jsp">Consultar Escala</a>
+				<li><a href="GerarEscalaADMIN.jsp">Gerar Escala</a>
 			</ul>
 			
 			<ul class="nav navbar-nav navbar-right">

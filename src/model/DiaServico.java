@@ -230,13 +230,15 @@ public class DiaServico extends JDBCDAO{
 		//System.out.println("SALVO BD");
 	}
 
-	public List<DiaServico> listarEscala(String dataInicial, String dataFinal) {
+	public List<DiaServico> listarEscala(String dataInicial, String dataFinal) throws SQLException {
 		List<DiaServico> dias = new ArrayList<DiaServico>();
+		
+		this.statement = this.database.createStatement();
 		
 		try{
 			this.resultSet = this.statement.executeQuery("SELECT idservico, data, cor "
 					+ "FROM servico NATURAL JOIN tiposervico "
-					+ "WHERE data > '" + dataInicial + "' AND data < '" + dataFinal + "';");
+					+ "WHERE data >= '" + dataInicial + "' AND data <= '" + dataFinal + "' ORDER BY data;");
 			
 		while (this.resultSet.next()) {
 			DiaServico tempDia = new DiaServico();
@@ -276,6 +278,7 @@ public class DiaServico extends JDBCDAO{
 		
 		
 		}catch(Exception e){
+			e.printStackTrace();
 			return null;
 		}
 		return dias;

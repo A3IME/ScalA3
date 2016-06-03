@@ -3,6 +3,8 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<meta HTTP-EQUIV=Expires CONTENT="0">   
+		<meta HTTP-EQUIV="Pragma" CONTENT="no-cache">  
 	    <meta charset="utf-8">
 	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
 	    <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -73,13 +75,13 @@ else {
 		<div class="row">
 			<div class="col-lg-4"></div>
 			<div class="col-lg-4">
-				<form class="form-group form-horizontal" style="padding-top:80px">
+				<form action="SuperUsuarioServlet" class="form-group form-horizontal" style="padding-top:80px" method="post">
 					
 				<h4 class="center text-center">Cadastro de Admin</h4>
 					<div class="form-group" style="padding-top:20px">
 						<label class="control-label col-sm-2" for="nome">Nome Completo:</label>
 						<div class="col-sm-10">
-							<input type="text" class="form-control" id="nome" name="name" placeholder="Insira o nome"><br>
+							<input type="text" class="form-control" id="nome" name="nome" placeholder="Insira o nome"><br>
 						</div>
 					</div>
 					<div class="form-group">
@@ -93,13 +95,7 @@ else {
 						<div class="col-sm-10">
 							<input type="text" class="form-control" id="email" name="email" placeholder="Insira o email"><br>
 						</div>
-					</div>					
-					<div class="form-group">
-						<label class="control-label col-sm-2" for="name">Senha:</label>
-						<div class="col-sm-10">
-							<input type="text" class="form-control" id="senha" name="senha" placeholder="Insira a senha"><br>
-						</div>
-					</div>
+					</div>	
 					<div class="form-group">
 						<label class="control-label col-sm-2" for="telefone">Telefone:</label>
 						<div class="col-sm-10">

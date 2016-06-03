@@ -69,17 +69,16 @@ public class AdminServlet extends HttpServlet {
 				funcionarioManager.inserir(funcionario);
 				funcionarioManager.close();
 				System.out.println("Inserido!");
-				response.sendRedirect("InserirFuncionarioADMIN.jsp");
-				
+				request.setAttribute("alert", "Inserção Realizada com sucesso!");
+				ServletContext app = this.getServletContext();
+		        RequestDispatcher rd = app.getRequestDispatcher("/InserirFuncionarioADMIN.jsp");
+		        rd.forward(request, response);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				//e.printStackTrace();
 				System.out.println(e.getMessage());
 				response.sendRedirect("InserirFuncionarioADMIN.jsp");
 			}
-				
-			
-			
 		} 
 		else if(servOp.equals("Buscar")) {
 			String valor, campo;
@@ -169,7 +168,10 @@ public class AdminServlet extends HttpServlet {
 					
 					funcionarioManager.close();
 			        System.out.println("Editar concluido");
-					response.sendRedirect("BuscarFuncionarioADMIN.jsp");
+					request.setAttribute("alert", "Funcionário editado com sucesso!");
+					ServletContext app = this.getServletContext();
+			        RequestDispatcher rd = app.getRequestDispatcher("/BuscarFuncionarioADMIN.jsp");
+			        rd.forward(request, response);
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					//e.printStackTrace();
@@ -190,7 +192,10 @@ public class AdminServlet extends HttpServlet {
 			
 				funcionarioManager.close();
 				System.out.println("Excluir");
-				response.sendRedirect("BuscarFuncionarioADMIN.jsp");
+				request.setAttribute("alert", "Funcionário excluido com sucesso!");
+				ServletContext app = this.getServletContext();
+		        RequestDispatcher rd = app.getRequestDispatcher("/BuscarFuncionarioADMIN.jsp");
+		        rd.forward(request, response);
 					
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -263,6 +268,10 @@ public class AdminServlet extends HttpServlet {
 					dia.gravarBD();	
 				}
 				
+				request.setAttribute("alert", "Escala gerada com sucesso!");
+				ServletContext app = this.getServletContext();
+		        RequestDispatcher rd = app.getRequestDispatcher("/ConsultarEscalaADMIN.jsp");
+		        rd.forward(request, response);
 				
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -277,10 +286,12 @@ public class AdminServlet extends HttpServlet {
 			List<DiaServicoView> views = new ArrayList<DiaServicoView>();
 			
 			try {
-				(new DiaServico()).open(databaseName, dbUser, dbPassword);
-				dias = (new DiaServico()).listarEscala(dataInicial, dataFinal);
+				DiaServico diaManager = new DiaServico();
+				diaManager.open(databaseName, dbUser, dbPassword);
+				dias = diaManager.listarEscala(dataInicial, dataFinal);
 				
 				for(DiaServico dia : dias) {
+					dia.open(databaseName, dbUser, dbPassword);
 					views.add(dia.getView());
 				}
 				

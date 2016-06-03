@@ -17,7 +17,15 @@
 	</head>
 <body>
 <%
-//Controle de acessos	
+//Controle de acessos
+if (request.getAttribute("alert") != null) {
+	%>
+	<script>
+		alert("<%= (String)request.getAttribute("alert") %>");
+	</script>
+<%
+request.removeAttribute("alert");
+}
 String nome = null;
 String logId = null;
 Cookie[] cookies = request.getCookies();
@@ -52,6 +60,8 @@ else {
 		   	<ul class="nav navbar-nav">
 				<li><a href="#">Inserir</a></li>
 				<li><a href="BuscarFuncionarioADMIN.jsp">Buscar</a></li>
+				<li><a href="ConsultarEscalaADMIN.jsp">Consultar Escala</a>
+				<li><a href="GerarEscalaADMIN.jsp">Gerar Escala</a>
 			</ul>
 			
 			<ul class="nav navbar-nav navbar-right">

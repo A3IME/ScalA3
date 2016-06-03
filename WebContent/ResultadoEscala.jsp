@@ -28,22 +28,26 @@
 		<div class="row content">
 			<div class="col-sm-2 sidenav"></div>
 				<div class="col-sm-8">
-				<% for (DiaServicoView view : views) { %>
+				<% if (views != null) {
+					for (DiaServicoView view : views) { %>
 					<table class="table table striped table-hover text-center well">
 						<thead> 
-							<th colspan="4">Data: __/__/__</th><br>
+							<th colspan="4">Data: <%= view.getData() %></th><br>
+						</thead>
+						<thead> 
+							<th colspan="4">Cor: <%= view.getCor() %></th><br>
 						</thead>
 						<tbody>
+							<% for (int i = 0; i < view.getNomeServico().size(); i++) { %>
 							<tr>
-								<td colspan="8"></td>
+								<td><%= view.getNomeServico().get(i) %></td>
+								<td><%= view.getPessoasServico().get(i) %></td>
 							</tr>
-							<tr>
-								<td>Mopa</td>
-								<td>MOPAA</td>
-							</tr>
+							<% } %>
 						</tbody>
 					</table>
-					<% } %>
+					<% }
+					}%>
 				</div>
 			</div>
 		</div>

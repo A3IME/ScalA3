@@ -1,9 +1,22 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8" import="control.jdbc.JDBCTipoServicoDAO, java.util.List, java.util.HashMap, java.util.Calendar"%>
+    pageEncoding="UTF-8" import="control.jdbc.JDBCTipoServicoDAO, java.util.List, java.util.HashMap, java.util.Calendar, java.text.SimpleDateFormat"%>
     
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+		<meta HTTP-EQUIV=Expires CONTENT="0">   
+		<meta HTTP-EQUIV="Pragma" CONTENT="no-cache">  
+	    <meta charset="utf-8">
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	    <meta name="viewport" content="width=device-width, initial-scale=1">
+	    <title>Inserir</title>
+
+	    <link href="css/bootstrap.min.css" rel="stylesheet">
+	    <link href="css/style2.css" rel="stylesheet">
+
+		<script src="js/jquery.js"></script>		
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/npm.js"></script>
 <script type="text/javascript">
 <%
   JDBCTipoServicoDAO tipoServicoDao = new JDBCTipoServicoDAO();
@@ -65,6 +78,7 @@ function checkSelect(el, divEl) {
    //document.getElementById('text1').style.display = 'none';
 }
 </script>
+</head>
 <body>
 <%
 String nome = null;
@@ -87,13 +101,36 @@ else {
 	nome = (String)session.getAttribute("nome");
 }
 %>
+<!-- Barra de Navegação-->
+		
+		<nav class="navbar navbar-default navbar-fixed-top">
+		  <div class="container-fluid">
+		  	<div class="navbar-header">
+				<img class="navbar-brand" src="images/scala3.png" height="100px" width="100px" />
+			</div>
+		       
+		   <div class="collapse navbar-collapse" >
+		   	<ul class="nav navbar-nav">
+				<li><a href="InserirFuncionarioADMIN.jsp">Inserir</a></li>
+				<li><a href="BuscarFuncionarioADMIN.jsp">Buscar</a></li>
+				<li><a href="ConsultarEscalaADMIN.jsp">Consultar Escala</a>
+				<li><a href="GerarEscalaADMIN.jsp">Gerar Escala</a>
+			</ul>
+			
+			<ul class="nav navbar-nav navbar-right">
+				<li><a href="TelaLogin.jsp"><span class="glyphicon glyphicon-log-in">Sair</span></a></li>
+			
+			</ul>
+		   </div>
+		  </div>
+		</nav>
 
-<form action="AdminServlet" method="post">
+<form action="AdminServlet" method="post" style="padding-top:70px; padding-left:20px">
 <%
   for (int i = 0; i < 7; i++) {
 %>
   <div id=<%=("\"d" + i + "\"") %>>
-  <p>Dia <%=dia0.getTime()%></p>
+  <p>Dia <%=(new SimpleDateFormat("dd/MM/yyyy")).format(dia0.getTime())%></p>
   Selecione a cor:
   <select onchange="checkSelect(this, this.parentElement)" name=<%=("\"d" + i + "cor\"")%>>
     <option></option>
@@ -106,10 +143,12 @@ else {
     %>
   </select>
   <div id=<%=("\"d" + i + "funcao\"") %>></div>
-  </div>
+  
 <%
 dia0.add(Calendar.DATE, +1);
 } %>
 <input type="submit" name="opt" value="Gerar"/>
+</div>
 </form>
+
 </body>

@@ -16,7 +16,6 @@
 			<td>Telefone</td>
 			<td>Excluir</td>
 			<td>Editar dados</td>	
-			<td>Editar estado</td>	
 		</tr>
 		<%
 			//ADMICIONAR HABILITAÇÂO. 
@@ -43,7 +42,6 @@
 					out.println("<input type=\"submit\" name=\"opt\" value=\"Editar dados\"></form></td>");
 					out.print("<td><form method=\"post\" action=\"/ScalA3/AdminServlet\" target=\"_parent\"><input type=\"hidden\" name=\"id\" value=\"" + funcionario.getId() + "\">");
 					out.print("<input type=\"hidden\" name=\"sOpt\" value=\"iniciar\">");
-					out.println("<input type=\"submit\" name=\"opt\" value=\"Editar estado\"></form></td>");
 					//out.println("<td>" + "EDITAR" + "</td>");
 					out.println("</tr>");
 				}

@@ -52,11 +52,16 @@ public class FuncionarioServlet extends HttpServlet {
 			List<DiaServico> dias = new ArrayList<DiaServico>();
 			List<DiaServicoView> views = new ArrayList<DiaServicoView>();
 			
+			System.out.println(dataInicial);
+			System.out.println(dataFinal);
+			
 			try {
-				(new DiaServico()).open(databaseName, dbUser, dbPassword);
-				dias = (new DiaServico()).listarEscala(dataInicial, dataFinal);
+				DiaServico diaManager = new DiaServico();
+				diaManager.open(databaseName, dbUser, dbPassword);
+				dias = diaManager.listarEscala(dataInicial, dataFinal);
 				
 				for(DiaServico dia : dias) {
+					dia.open(databaseName, dbUser, dbPassword);
 					views.add(dia.getView());
 				}
 				

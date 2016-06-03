@@ -3,6 +3,8 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<meta HTTP-EQUIV=Expires CONTENT="0">   
+		<meta HTTP-EQUIV="Pragma" CONTENT="no-cache">  
 	    <meta charset="utf-8">
 	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
 	    <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -31,10 +33,10 @@ for(Cookie cookie : cookies){
 	    }
 	}
 }
-// if((session.getAttribute("logId") == null) || ((Integer)session.getAttribute("id") != 0)){
-// //if((!session.getAttribute("logId").equals(logId)) || ((Integer)session.getAttribute("id") != 0)){
-// 	response.sendRedirect("TelaLogin.jsp");
-// }
+if((session.getAttribute("logId") == null) || ((Integer)session.getAttribute("id") == 0) || ((Boolean)session.getAttribute("adm") == true) ){
+//if((!session.getAttribute("logId").equals(logId)) || ((Integer)session.getAttribute("id") != 0)){
+	response.sendRedirect("TelaLogin.jsp");
+}
 else {
 	nome = (String)session.getAttribute("nome");
 }
@@ -97,7 +99,7 @@ else {
 				</form>
 			</div>
 		</div>
-		<iframe name="display" width="100%" height="100%" src="ResultadoEscala.jsp"></iframe>
+		<iframe name="display" width="100%" height="500px" src="ResultadoEscala.jsp"></iframe>
  	<!-- 
  	<a href="InserirAdminSU.jsp">Inserir</a>
 	<a href="#">Buscar</a>
