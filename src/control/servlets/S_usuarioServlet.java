@@ -56,7 +56,7 @@ public class S_usuarioServlet extends HttpServlet {
 				JDBCAdministradorDAO administradorManager = new JDBCAdministradorDAO();
 				administradorManager.open(databaseName, dbUser, dbPassword);
 				
-				Administrador administrador = new Administrador(nome, Integer.parseInt(matricula), email, telefone, 0, null);
+				Administrador administrador = new Administrador(nome, Integer.parseInt(matricula), email, telefone, 255, null);
 				administradorManager.inserir(administrador);
 				administradorManager.close();
 				System.out.println("Inserido!");

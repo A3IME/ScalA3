@@ -2,6 +2,7 @@ package control.servlets;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import model.DiaServico;
+import model.DiaServicoView;
 
 /**
  * Servlet implementation class FuncionarioServlet
@@ -23,7 +25,7 @@ import model.DiaServico;
 @WebServlet("/FuncionarioServlet")
 public class FuncionarioServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final String SimpleDateFormat parser  = null;
+	private static final SimpleDateFormat parser  = null;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -43,35 +45,33 @@ public class FuncionarioServlet extends HttpServlet {
 		
 		servOp = (String)request.getParameter("opt");
 		
-		if(servOp.equals("Buscar")) {
+		if(servOp.equals("Consultar")) {
 			String dataInicial, dataFinal;
 			dataInicial = (String)request.getParameter("dataInicial");
 			dataFinal = (String)request.getParameter("dataFinal");
-			List<DiaServico> dias = null;
-			dias = new ArrayList<DiaServico>();
-			
-			SimpleDateFormat parser = new SimpleDateFormat("MM/dd/yyyy");
-			SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
-			String dataInicialSQL = formater.format(parser.parse(dataInicial));
-			String dataFinalSQL = formater.format(parser.parse(dataFinal));
+			List<DiaServico> dias = new ArrayList<DiaServico>();
+			List<DiaServicoView> views = new ArrayList<DiaServicoView>();
 			
 			try {
 				(new DiaServico()).open(databaseName, dbUser, dbPassword);
 				dias = (new DiaServico()).listarEscala(dataInicial, dataFinal);
 				
+				for(DiaServico dia : dias) {
+					views.add(dia.getView());
+				}
+				
 				(new DiaServico()).close();
 				
-				//TERMINAR \/
-				request.setAttribute("funcionarios", funcionarios);
+				request.setAttribute("views", views);
 				ServletContext app = this.getServletContext();
-		        RequestDispatcher rd = app.getRequestDispatcher("/ResultadoBuscaSU.jsp");
+		        RequestDispatcher rd = app.getRequestDispatcher("/ResultadoEscala.jsp");
 		        System.out.println("Buscar");
 		        rd.forward(request, response);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				//e.printStackTrace();
 				System.out.println(e.getMessage());
-				response.sendRedirect("BuscarAdminSU.jsp");
+				response.sendRedirect("ConsultarFUNC.jsp");
 			}
 		}
 	}

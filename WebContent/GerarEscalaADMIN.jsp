@@ -11,6 +11,7 @@
   //List<String> cores = tipoServicoDao.listCores();
   HashMap<String, List<String>> cores_funcao = tipoServicoDao.mapearTipos();
   Calendar dia0 = Calendar.getInstance();
+  dia0.add(Calendar.DATE, 7);
 %>
 var cor_funcao = [
 <%
@@ -41,7 +42,7 @@ function checkSelect(el, divEl) {
 		}
 	}
 	
-	var deleted = document.getElementById(divEl.getAttribute("id") + "input_funcao");
+	var deleted = document.getElementById(divEl.getAttribute("id") + "funcao");
 	while (deleted.hasChildNodes()) {  
 	    deleted.removeChild(deleted.firstChild);
 	}
@@ -53,6 +54,7 @@ function checkSelect(el, divEl) {
 		var inputFuncao = document.createElement("INPUT");
 		inputFuncao.setAttribute("type", "number");
 		inputFuncao.setAttribute("name", divEl.getAttribute("id") + funcoes[i]);
+		inputFuncao.setAttribute("value", 0);
 		divFuncao.appendChild(txtFuncao);
 		divFuncao.appendChild(inputFuncao);
 		deleted.appendChild(divFuncao);
@@ -64,15 +66,36 @@ function checkSelect(el, divEl) {
 }
 </script>
 <body>
+<%
+String nome = null;
+String logId = null;
+Cookie[] cookies = request.getCookies();
+if(cookies != null){
+for(Cookie cookie : cookies){
+		System.out.println("#" + cookie.getName());
+	    if(cookie.getName().equals("logId")){
+	    	logId = cookie.getValue();
+	    	//print para controle apenas. apagar do projeto final
+	    	System.out.println(logId);
+	    }
+	}
+}
+if((session.getAttribute("logId") == null) || ((Integer)session.getAttribute("id") == 0) || ((Boolean)session.getAttribute("adm") == false) ){
+	response.sendRedirect("TelaLogin.jsp");
+}
+else {
+	nome = (String)session.getAttribute("nome");
+}
+%>
 
-<form action="AdminServlet">
+<form action="AdminServlet" method="post">
 <%
   for (int i = 0; i < 7; i++) {
 %>
   <div id=<%=("\"d" + i + "\"") %>>
   <p>Dia <%=dia0.getTime()%></p>
   Selecione a cor:
-  <select onchange="checkSelect(this, this.parentElement)" name=<%=("\"d" + i + "select\"")%>>
+  <select onchange="checkSelect(this, this.parentElement)" name=<%=("\"d" + i + "cor\"")%>>
     <option></option>
     <%
       for (String cor : cores_funcao.keySet()) {
@@ -82,11 +105,11 @@ function checkSelect(el, divEl) {
       }
     %>
   </select>
-  <div id=<%=("\"d" + i + "input_funcao\"") %>></div>
+  <div id=<%=("\"d" + i + "funcao\"") %>></div>
   </div>
 <%
 dia0.add(Calendar.DATE, +1);
 } %>
-<input type="submit" name="submit"/>
+<input type="submit" name="opt" value="Gerar"/>
 </form>
 </body>

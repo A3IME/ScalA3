@@ -7,6 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 </head>
 <body>
+
 	<table border="1">
 		<tr>
 			<td>Id</td>
@@ -17,7 +18,6 @@
 			<td>Admin</td>
 			<td>Excluir</td>
 			<td>Editar dados</td>	
-			<td>Editar estado</td>	
 		</tr>
 		<%
 			//ADMICIONAR HABILITAÇÂO. 
@@ -50,7 +50,6 @@
 					out.println("<input type=\"submit\" name=\"opt\" value=\"Editar dados\"></form></td>");
 					out.print("<td><form method=\"post\" action=\"/ScalA3/SuperUsuarioServlet\" target=\"_parent\"><input type=\"hidden\" name=\"id\" value=\"" + funcionario.getId() + "\">");
 					out.print("<input type=\"hidden\" name=\"sOpt\" value=\"iniciar\">");
-					out.println("<input type=\"submit\" name=\"opt\" value=\"Editar estado\"></form></td>");
 					//out.println("<td>" + "EDITAR" + "</td>");
 					out.println("</tr>");
 				}

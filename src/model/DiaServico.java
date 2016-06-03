@@ -1,5 +1,6 @@
 package model;
 
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -27,7 +28,9 @@ public class DiaServico extends JDBCDAO{
 	}
 	
 	public DiaServico(){
-		
+		this.qtdServico = new HashMap<String, Integer>();
+		this.tipoServico = new ArrayList<String>();
+		this.pessoasServico = new HashMap<String, List<Integer>>();
 	}
 
 	public int getId() {
@@ -57,6 +60,11 @@ public class DiaServico extends JDBCDAO{
 	/*public int getQtde() {
 		return qtde;
 	}*/
+	
+	public void qtdeServicoPut(String funcao, int qtde) {
+		this.tipoServico.add(funcao);
+		this.qtdServico.put(funcao, qtde);
+	}
 
 	public void setQtdeServico(HashMap<String, Integer> qtd) {
 		this.qtdServico = qtd;
@@ -66,7 +74,39 @@ public class DiaServico extends JDBCDAO{
 		return pessoasServico;
 	}
 	
+	public List<List<Integer>> getEscalasDiasAnteriores() throws SQLException {
+		List<List<Integer>> result = new ArrayList<List<Integer>>();
+		
+		
+		Calendar date = Calendar.getInstance();
+		for (int i = 0; i < 2; i++) {
+			List<Integer> escalaDia = new ArrayList<Integer>();
+			date.add(Calendar.DATE, -1);
+			
+			String dataString = (new SimpleDateFormat("dd/MM/yyyy")).format(date.getTime());
+			System.out.println(dataString);
+
+			this.statement = this.database.createStatement();
+			this.resultSet = this.statement.executeQuery("SELECT idfunc "
+					+ "FROM servico_funcionario NATURAL JOIN servico "
+					+ "WHERE data='" + dataString + "'");
+			
+			while(this.resultSet.next()) {
+				escalaDia.add(this.resultSet.getInt("idfunc"));		
+			}
+			
+			result.add(escalaDia);
+		}
+		
+		return result;
+	}
+	
+	public List<String> getTipoServico() {
+		return this.tipoServico;
+	}
+	
 	public List<Integer> gerarEscalaDia(HashMap<String, List<FuncionarioHabilitado>> filasFunionarios, List<List<Integer>> escalasDiasAnteriores) {
+		
 		TreeSet<Integer> funcionariosNaoDisponiveis = new TreeSet<Integer>();
 		List<Integer> funcionariosServicoHoje = new ArrayList<Integer>();
 		for(List<Integer> tempList : escalasDiasAnteriores) {
@@ -135,6 +175,24 @@ public class DiaServico extends JDBCDAO{
 		}
 		
 	}
+	
+	public void printPreEscalaDia() {
+		System.out.println("+-+-+-+-");
+		System.out.println(data);
+		System.out.println(cor);
+		
+		for(String tipo : tipoServico){
+			System.out.println(tipo);
+			System.out.println(qtdServico.get(tipo));	
+		}
+	}
+	
+	public void printCorData() {
+		System.out.println("------");
+		System.out.println(data);
+		System.out.println(cor);
+		
+	}
 
 	public String getCor() {
 		return cor;
@@ -142,6 +200,34 @@ public class DiaServico extends JDBCDAO{
 
 	public void setCor(String cor) {
 		this.cor = cor;
+	}
+	
+	public void gravarBD() throws SQLException {
+		this.statement = this.database.createStatement();
+		int idtiposervico, idservico;
+		String dataFormatada = new SimpleDateFormat("yyyy-MM-dd").format(this.data.getTime());
+		for(String funcao : tipoServico){
+			this.resultSet = this.statement.executeQuery("SELECT idtiposervico FROM tiposervico "
+					+ "WHERE cor = '" + this.cor + "' "
+					+ "AND funcao = '" + funcao + "';");
+			
+			this.resultSet.next();
+			idtiposervico = this.resultSet.getInt("idtiposervico");
+			
+			this.resultSet = this.statement.executeQuery("INSERT INTO servico (data, idtiposervico, qtde) "
+					+ "VALUES ('" + dataFormatada + "', " + idtiposervico + ", " 
+					+ qtdServico.get(funcao) + ") RETURNING idservico;");
+			
+			this.resultSet.next();
+			idservico = this.resultSet.getInt("idservico");
+			
+			for(int idfunc : pessoasServico.get(funcao)) {
+				this.statement.execute("INSERT INTO servico_funcionario (idservico, idfunc) "
+						+ "VALUES (" + idservico + ", " + idfunc + ");");
+					
+			}
+		}
+		//System.out.println("SALVO BD");
 	}
 
 	public List<DiaServico> listarEscala(String dataInicial, String dataFinal) {
@@ -193,6 +279,36 @@ public class DiaServico extends JDBCDAO{
 			return null;
 		}
 		return dias;
+	}
+	
+	public DiaServicoView getView() throws SQLException {
+		this.statement = this.database.createStatement();
+		String dataFormatada = new SimpleDateFormat("dd/MM/yyyy").format(this.data.getTime());
+		
+		List<String> funcoes = new ArrayList<String>();
+		List<String> pessoas = new ArrayList<String>();
+		
+		DiaServicoView view = new DiaServicoView();
+		
+		view.setCor(this.cor);
+		view.setData(dataFormatada);
+		
+		for(String funcao : tipoServico) {
+			for(int id : pessoasServico.get(funcao)){
+				this.resultSet = this.statement.executeQuery("SELECT nomecompleto FROM funcionario "
+						+ "WHERE idfunc=" + id + ";");
+				this.resultSet.next();
+				funcoes.add(funcao);
+				pessoas.add(this.resultSet.getString("nomecompleto"));
+			}
+		}
+		
+		view.setPessoasServico(pessoas);
+		view.setNomeServico(funcoes);
+		
+		return view;
+		
+		
 	}
 	
 }

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TreeSet;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -16,11 +17,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import Tools.FuncionarioComparator;
+import Tools.TipoServicoComparator;
 import control.jdbc.JDBCAdministradorDAO;
 import control.jdbc.JDBCFuncionarioDAO;
 import control.jdbc.JDBCFuncionarioHabilitadoDAO;
 import model.Administrador;
 import model.DiaServico;
+import model.DiaServicoView;
 import model.Funcionario;
 import model.FuncionarioHabilitado;
 import model.TipoServico;
@@ -62,7 +65,7 @@ public class AdminServlet extends HttpServlet {
 				JDBCFuncionarioDAO funcionarioManager = new JDBCFuncionarioDAO();
 				funcionarioManager.open(databaseName, dbUser, dbPassword);
 				
-				Funcionario funcionario = new Funcionario(nome, Integer.parseInt(matricula), email, telefone, 0, null);
+				Funcionario funcionario = new Funcionario(nome, Integer.parseInt(matricula), email, telefone, 255, null);
 				funcionarioManager.inserir(funcionario);
 				funcionarioManager.close();
 				System.out.println("Inserido!");
@@ -201,61 +204,99 @@ public class AdminServlet extends HttpServlet {
 			response.sendRedirect("EditarEstadoADMIN.jsp");;
 		}
 		else if(servOp.equals("Gerar")) {
-			List<String> servicos = new ArrayList<String>();
-			List<Integer> ids = new ArrayList<Integer>();
-			TipoServico tipoServico = new TipoServico(0,"a","a");
-			
-			//CRIAR JDBC TIPOSERVICO 
-			//DADO COR E SERVICO PEGAR ID
-			servicos.add("cb dia");
-			servicos.add("sgt dia");
-			String cor = "vermelha";
-			//^ RECEBIDOS DO ADMIN
-			ids.add(0);
-			ids.add(2);
-			//^ RECUPERADO POR METODO
-			tipoServico.setCor(cor);
-			
-			try{
+			try {
+				DiaServico diaManager = new DiaServico();
+				diaManager.open(databaseName, dbUser, dbPassword);
+				
+				List<DiaServico> dias = new ArrayList<DiaServico>();
+				
+				for (int i = 0; i < 7; i++) {
+					Calendar date = Calendar.getInstance();
+					DiaServico dia = new DiaServico();
+					dia.setCor(request.getParameter("d" + i + "cor"));
+					dia.setData(date);
+					dias.add(dia);
+					
+					date.add(Calendar.DATE, i+7);
+					dia.printCorData();
+				}
+				
+				HashMap<String, String[]> parametersMap = (HashMap<String, String[]>) request.getParameterMap();
+				
+				for (String entry : parametersMap.keySet()) {
+					if ((!entry.equals("opt")) && (!entry.substring(2).equals("cor"))) {
+						int i = Integer.parseInt(entry.substring(1, 2));
+						dias.get(i).qtdeServicoPut(entry.substring(2), Integer.parseInt(parametersMap.get(entry)[0]));
+					}
+				}
+				
+				List<List<Integer>> escalasDiasAnteriores = diaManager.getEscalasDiasAnteriores();
+				
+				TreeSet<TipoServico> tiposServico = new TreeSet<TipoServico>(new TipoServicoComparator());
+				for (int i = 0; i < 7; i++) {
+					for (String funcao : dias.get(i).getTipoServico()) {
+						TipoServico tipoServico = new TipoServico(0, funcao, dias.get(i).getCor());
+						tiposServico.add(tipoServico);
+					}
+				}
+				
 				JDBCFuncionarioHabilitadoDAO funcionariosHabilitados = new JDBCFuncionarioHabilitadoDAO();
 				funcionariosHabilitados.open(databaseName, dbUser, dbPassword);
 				HashMap<String, List<FuncionarioHabilitado>> filasFunionarios = new HashMap<String, List<FuncionarioHabilitado>>();
 				
-				int i = 0;
-				for(String servico : servicos){
-					tipoServico.setFuncao(servico);
-					tipoServico.setId(ids.get(i));
-					//^ FAZER METODO Q PEGA ID DO BD E SALVA DIRETO
-					filasFunionarios.put(servico, funcionariosHabilitados.listarFuncionariosHabilitados(tipoServico));
-					filasFunionarios.get(servico).sort(FuncionarioComparator.getInstance());
-					i++;
-				}
-		
-				Calendar data = Calendar.getInstance();
-				HashMap<String, Integer> qtds = new HashMap<String, Integer>();
-				qtds.put(servicos.get(0), 1);
-				qtds.put(servicos.get(1), 1);
-				DiaServico diaServico = new DiaServico(0, cor, data, servicos, qtds);
-				
-				diaServico.open(databaseName, dbUser, dbPassword);
-				
-				List<List<Integer>> pessoalServicoAnteriores = new ArrayList<List<Integer>>();
-				Calendar dia = Calendar.getInstance();
-				
-				
-				for(i = 0; i < 2; i++){
-					dia.add(Calendar.DATE, -1);
-					pessoalServicoAnteriores.add(diaServico.getFuncionariosServicoDia(dia));
+				for(TipoServico tipoServico : tiposServico){
+					filasFunionarios.put(tipoServico.getFuncao(), funcionariosHabilitados.listarFuncionariosHabilitados(tipoServico));
+					filasFunionarios.get(tipoServico.getFuncao()).sort(FuncionarioComparator.getInstance());
 				}
 				
-				diaServico.gerarEscalaDia(filasFunionarios, pessoalServicoAnteriores);
-				diaServico.printEscalaDia();
+				for (int i = 0; i < 7; i++) {
+					List<Integer> funcionariosHoje;
+					funcionariosHoje = dias.get(i).gerarEscalaDia(filasFunionarios, escalasDiasAnteriores);
+					escalasDiasAnteriores.set(1, escalasDiasAnteriores.get(0));
+					escalasDiasAnteriores.set(0, funcionariosHoje);
+					
+					dias.get(i).printEscalaDia();
+				}
 				
-						
+				for(DiaServico dia : dias) {
+					dia.open(databaseName, dbUser, dbPassword);
+					dia.gravarBD();	
+				}
+				
+				
 			} catch (SQLException e) {
-	
+				e.printStackTrace();
 			}
 			
+		}
+		else if(servOp.equals("Consultar")) {
+			String dataInicial, dataFinal;
+			dataInicial = (String)request.getParameter("dataInicial");
+			dataFinal = (String)request.getParameter("dataFinal");
+			List<DiaServico> dias = new ArrayList<DiaServico>();
+			List<DiaServicoView> views = new ArrayList<DiaServicoView>();
+			
+			try {
+				(new DiaServico()).open(databaseName, dbUser, dbPassword);
+				dias = (new DiaServico()).listarEscala(dataInicial, dataFinal);
+				
+				for(DiaServico dia : dias) {
+					views.add(dia.getView());
+				}
+				
+				(new DiaServico()).close();
+				
+				request.setAttribute("views", views);
+				ServletContext app = this.getServletContext();
+		        RequestDispatcher rd = app.getRequestDispatcher("/ResultadoEscala.jsp");
+		        System.out.println("Buscar");
+		        rd.forward(request, response);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				//e.printStackTrace();
+				System.out.println(e.getMessage());
+				response.sendRedirect("InserirFuncionarioADMIN.jsp");
+			}
 		}
 	}
 
